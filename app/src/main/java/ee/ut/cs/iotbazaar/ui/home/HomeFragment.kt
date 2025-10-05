@@ -38,6 +38,9 @@ class HomeFragment : Fragment() {
         binding.Camera.setOnClickListener {
             findNavController().navigate(R.id.action_toCamera)
         }
+        binding.profileIcon.setOnClickListener {
+            ProfilePopupFragment().show(parentFragmentManager, "ProfilePopupFragment")
+        }
         return root
     }
 
