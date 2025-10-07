@@ -38,7 +38,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reservedItemsRecycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="423dp"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/row_reserved_item" />
 
@@ -74,6 +74,16 @@
         app:layout_constraintTop_toBottomOf="@id/Camera"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/qr_code_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="29dp"
+        android:text="qr_code"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

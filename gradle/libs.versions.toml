@@ -15,6 +15,9 @@ navigationUiKtx = "2.6.0"
 roomCompiler = "2.8.1"
 room = "2.8.1"
 recyclerview = "1.4.0"
+googleScanner = "16.1.0"
+playServices = "18.5.0"
+activity = "1.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +35,9 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+google-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "googleScanner" }
+play-services = { group = "com.google.android.gms", name = "play-services-base", version.ref = "playServices" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
 
 [plugins]

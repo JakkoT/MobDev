@@ -63,5 +63,16 @@
         android:name="ee.ut.cs.iotbazaar.ui.catalog.CatalogFragment"
         android:label="@string/title_catalog"
         tools:layout="@layout/fragment_catalog" />
-
+    <fragment
+        android:id="@+id/qrCodeScanner"
+        android:name="ee.ut.cs.iotbazaar.ui.camera.QrCodeScannerFragment"
+        android:label="QR Skanner">
+        <action
+            android:id="@+id/action_qrCodeScanner_to_qrCodeResult"
+            app:destination="@id/qrCodeResult" />
+    </fragment>
+    <fragment
+        android:id="@+id/qrCodeResult"
+        android:name="ee.ut.cs.iotbazaar.ui.camera.QrCodeResultFragment"
+        android:label="QR Tulemus" />
 </navigation>

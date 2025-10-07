@@ -61,6 +61,9 @@ class HomeFragment : Fragment() {
         binding.button2.setOnClickListener {
             findNavController().navigate(R.id.action_home_to_catalog)
         }
+        binding.qrCodeBtn.setOnClickListener {
+            findNavController().navigate(R.id.qrCodeScanner)
+        }
         return root
     }
 
