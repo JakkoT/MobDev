@@ -15,12 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IOTBazaar">
-        <activity
-            android:name=".ui.camera.QrCodeResult"
-            android:exported="false" />
-        <activity
-            android:name=".ui.camera.QrCodeScanner"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
