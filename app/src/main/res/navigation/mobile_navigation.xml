@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_toCamera"
             app:destination="@id/camera" />
+        <action
+            android:id="@+id/action_home_to_catalog"
+            app:destination="@id/navigation_catalog" />
     </fragment>
 
     <fragment
@@ -54,5 +57,11 @@
         android:name="ee.ut.cs.iotbazaar.ui.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/navigation_catalog"
+        android:name="ee.ut.cs.iotbazaar.ui.catalog.CatalogFragment"
+        android:label="@string/title_catalog"
+        tools:layout="@layout/fragment_catalog" />
 
 </navigation>

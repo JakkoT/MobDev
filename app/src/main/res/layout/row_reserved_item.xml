@@ -6,32 +6,31 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="1dp"
+    app:strokeColor="@color/purple_200"
+    app:strokeWidth="1dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="12dp">
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/itemName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_weight="1"
             android:textStyle="bold"
-            tools:text="Alice"
-            app:layout_constraintEnd_toStartOf="@id/userAge"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:textColor="?attr/colorOnBackground"
+            tools:text="ESP32 Dev Board" />
 
         <TextView
-            android:id="@+id/userAge"
+            android:id="@+id/itemStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="23"
-            app:layout_constraintBaseline_toBaselineOf="@id/userName"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:text="Reserved"
+            android:textSize="12sp"
+            android:textColor="@color/purple_700" />
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

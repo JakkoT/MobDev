@@ -8,6 +8,6 @@ import ee.ut.cs.iotbazaar.R
 class AccountFragment : Fragment(R.layout.fragment_account) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Profile icon moved to global ActionBar menu; no local view references needed.
     }
 }
-

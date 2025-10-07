@@ -21,4 +21,8 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         repository.insert(User(name = name, age = age))
 
     }
+
+    fun addUserIfNotExists(name: String, age: Int) = viewModelScope.launch {
+        repository.insertIfNotExists(name, age)
+    }
 }

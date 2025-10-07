@@ -38,7 +38,8 @@ class InboxFragment : Fragment() {
         }
 
         viewModel.users.observe(viewLifecycleOwner) { users ->
-            inboxAdapter.submitList(users)
+            val distinct = users.distinctBy { it.name }
+            inboxAdapter.submitList(distinct)
         }
     }
 
@@ -47,4 +48,3 @@ class InboxFragment : Fragment() {
         _binding = null
     }
 }
-

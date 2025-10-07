@@ -32,6 +32,7 @@ class NotificationsFragment : Fragment() {
         notificationsViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+        // Removed profile icon click; handled globally in ActionBar menu
         return root
     }
 

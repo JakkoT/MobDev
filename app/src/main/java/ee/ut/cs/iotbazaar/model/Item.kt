@@ -1,11 +1,13 @@
 package ee.ut.cs.iotbazaar.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 /**
- * Basic domain model representing an item in the app.
- * Currently only holds an immutable id and name.
+ * Room entity representing an IoT item that a user can reserve/borrow.
  */
+@Entity(tableName = "item")
 data class Item(
-    val id: Long,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String
 )
-
