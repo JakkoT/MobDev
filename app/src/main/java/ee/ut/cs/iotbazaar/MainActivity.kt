@@ -33,10 +33,29 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), 101)
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Only Home is top-level now so Catalogue & Notifications show back arrow
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        // Explicit navigation handling to ensure Home always works
+        navView.setOnItemSelectedListener { item ->
+            val destId = when (item.itemId) {
+                R.id.navigation_home -> R.id.navigation_home
+                R.id.navigation_catalog -> R.id.navigation_catalog
+                R.id.navigation_inbox -> R.id.navigation_inbox
+                else -> null
+            }
+            destId?.let {
+                if (navController.currentDestination?.id != it) {
+                    try {
+                        navController.navigate(it)
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "Navigation error to $it", e)
+                    }
+                }
+                true
+            } ?: false
+        }
 
         viewModel = ViewModelProvider(this)[UserViewModel::class.java]
 

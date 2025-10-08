@@ -9,5 +9,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "item")
 data class Item(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val name: String
+    val name: String,
+    // New field indicating whether the item is currently reserved
+    val reserved: Boolean = false
 )

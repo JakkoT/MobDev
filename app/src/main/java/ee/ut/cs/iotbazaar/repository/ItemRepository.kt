@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 // by interacting with the ItemDao to perform database operations related to Item entities.
 class ItemRepository(private val itemDao: ItemDao) {
     fun getAllItems(): Flow<List<Item>> = itemDao.getAll()
-    suspend fun insert(name: String) = itemDao.insert(Item(name = name))
+    suspend fun insert(name: String, reserved: Boolean = false) = itemDao.insert(Item(name = name, reserved = reserved))
     suspend fun delete(item: Item) = itemDao.delete(item)
     suspend fun count(): Int = itemDao.count()
 }

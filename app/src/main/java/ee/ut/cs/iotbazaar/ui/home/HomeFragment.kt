@@ -59,7 +59,8 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_toCamera)
         }
         binding.button2.setOnClickListener {
-            findNavController().navigate(R.id.action_home_to_catalog)
+            // Navigate directly to the destination fragment id
+            findNavController().navigate(R.id.navigation_catalog)
         }
         binding.qrCodeBtn.setOnClickListener {
             findNavController().navigate(R.id.qrCodeScanner)
