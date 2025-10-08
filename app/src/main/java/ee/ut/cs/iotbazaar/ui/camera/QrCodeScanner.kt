@@ -60,7 +60,7 @@ class QrCodeScannerFragment : Fragment() {
         // Install Google QR Scanner and start scanning immediately
         installGoogleScanner()
     }
-
+    //google qr scanner install logic from their webpage  https://developers.google.com/ml-kit/vision/barcode-scanning/code-scanner
     private fun installGoogleScanner() {
         val context = requireContext()
         val moduleInstall = ModuleInstall.getClient(context)
@@ -79,7 +79,7 @@ class QrCodeScannerFragment : Fragment() {
                 Toast.makeText(context, "Skanneri install ebaõnnestus: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
+    //Start up fro scanner to work with different functions
     private fun initScanner() {
         val options = GmsBarcodeScannerOptions.Builder()
             .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
@@ -87,28 +87,29 @@ class QrCodeScannerFragment : Fragment() {
             .build()
         scanner = GmsBarcodeScanning.getClient(requireContext(), options)
     }
-
+///scanning logic
     private fun startScanning() {
+        //if scanner is not installed, return error
         if (!isScannerInstalled) {
             Toast.makeText(requireContext(), "Moodul pole valmis, proovi uuesti", Toast.LENGTH_SHORT).show()
             return
         }
 
         scanner.startScan()
-            .addOnSuccessListener { barcode ->
+            .addOnSuccessListener { barcode -> //if the scanner works
                 val result = barcode.rawValue ?: "Tühi väärtus"
                 binding.scannedValueTv.text = "Skaneeritud väärtus:\n$result"
                 Toast.makeText(requireContext(), "Skaneeritud: $result", Toast.LENGTH_SHORT).show()
             }
-            .addOnCanceledListener {
+            .addOnCanceledListener { //was canceled before scanning
                 Toast.makeText(requireContext(), "Tühistatud", Toast.LENGTH_SHORT).show()
             }
-            .addOnFailureListener {
+            .addOnFailureListener { //failed to scan with specific error
                 Toast.makeText(requireContext(), "Viga: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
-    override fun onDestroyView() {
+    override fun onDestroyView() { //navigation helper
         super.onDestroyView()
         _binding = null
     }
