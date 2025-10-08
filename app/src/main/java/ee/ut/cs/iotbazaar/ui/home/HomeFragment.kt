@@ -47,12 +47,13 @@ class HomeFragment : Fragment() {
 
         // Observe items
         itemViewModel.items.observe(viewLifecycleOwner) { items ->
-            itemAdapter.submit(items)
-            binding.reservedEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+            val reservedItems = items.filter { it.reserved } // only reserved
+            itemAdapter.submit(reservedItems)
+            binding.reservedEmpty.visibility = if (reservedItems.isEmpty()) View.VISIBLE else View.GONE
         }
 
-        // Seed sample items once (safe to call repeatedly)
-        itemViewModel.seedIfEmpty()
+        // Replace old seeding calls with unified method
+        itemViewModel.ensureReservedSeedItems()
 
         // Buttons
         binding.Camera.setOnClickListener {

@@ -23,4 +23,8 @@ interface ItemDao {
 
     @Query("SELECT COUNT(*) FROM item")
     suspend fun count(): Int
+
+    // get single item by name
+    @Query("SELECT * FROM item WHERE name = :name LIMIT 1")
+    suspend fun getByName(name: String): Item?
 }

@@ -10,6 +10,5 @@ import androidx.room.PrimaryKey
 data class Item(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
-    // New field indicating whether the item is currently reserved
-    val reserved: Boolean = false
+    val reserved: Boolean = false //field indicating whether the item is currently reserved
 )

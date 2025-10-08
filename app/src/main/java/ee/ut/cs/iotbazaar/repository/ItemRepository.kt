@@ -12,4 +12,5 @@ class ItemRepository(private val itemDao: ItemDao) {
     suspend fun insert(name: String, reserved: Boolean = false) = itemDao.insert(Item(name = name, reserved = reserved))
     suspend fun delete(item: Item) = itemDao.delete(item)
     suspend fun count(): Int = itemDao.count()
+    suspend fun exists(name: String): Boolean = itemDao.getByName(name) != null
 }
