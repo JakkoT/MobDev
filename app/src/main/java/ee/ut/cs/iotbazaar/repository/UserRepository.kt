@@ -4,6 +4,9 @@ import ee.ut.cs.iotbazaar.data.dao.UserDao
 import ee.ut.cs.iotbazaar.data.entities.User
 import kotlinx.coroutines.flow.Flow
 
+// Repository class that abstracts access to multiple data sources.
+// In this case, it provides a clean API for data access to the rest of the application
+// by interacting with the UserDao to perform database operations related to User entities.
 class UserRepository(private val userDao: UserDao) {
 
     fun getAllUsers(): Flow<List<User>> = userDao.getAll()

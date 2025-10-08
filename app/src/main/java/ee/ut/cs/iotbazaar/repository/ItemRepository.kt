@@ -4,6 +4,9 @@ import ee.ut.cs.iotbazaar.data.dao.ItemDao
 import ee.ut.cs.iotbazaar.model.Item
 import kotlinx.coroutines.flow.Flow
 
+// Repository class that abstracts access to multiple data sources.
+// In this case, it provides a clean API for data access to the rest of the application
+// by interacting with the ItemDao to perform database operations related to Item entities.
 class ItemRepository(private val itemDao: ItemDao) {
     fun getAllItems(): Flow<List<Item>> = itemDao.getAll()
     suspend fun insert(name: String) = itemDao.insert(Item(name = name))

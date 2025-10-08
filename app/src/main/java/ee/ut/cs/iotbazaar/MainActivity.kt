@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
+
+        // Request camera permission at runtime
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), 101)
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -38,10 +40,12 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
+        // Observe users LiveData and log changes
         viewModel.users.observe(this) { users ->
             Log.d("RoomExample", "Users: $users")
         }
 
+        // Seed a default user if none exists
         viewModel.addUserIfNotExists("Jakko", 22)
     }
 

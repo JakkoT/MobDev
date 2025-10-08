@@ -11,6 +11,8 @@ import ee.ut.cs.iotbazaar.databinding.FragmentCatalogBinding
 import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
 import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
 
+
+// CatalogFragment for displaying a list of items in the catalog.
 class CatalogFragment : Fragment() {
 
     private var _binding: FragmentCatalogBinding? = null
@@ -18,7 +20,6 @@ class CatalogFragment : Fragment() {
 
     private lateinit var itemViewModel: ItemViewModel
     private val adapter = ItemAdapter(onLongPressDelete = null) // no delete in catalog for now
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +35,7 @@ class CatalogFragment : Fragment() {
 
         binding.catalogRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.catalogRecycler.adapter = adapter
-
+        // Observe items from ViewModel and submit to adapter
         itemViewModel.items.observe(viewLifecycleOwner) { items ->
             adapter.submit(items)
         }

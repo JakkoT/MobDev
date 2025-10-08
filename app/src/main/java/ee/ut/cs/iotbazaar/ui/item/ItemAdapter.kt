@@ -13,15 +13,18 @@ class ItemAdapter(
 
     private val data = mutableListOf<Item>()
 
+    // Update the adapter's data and refresh the view
     fun submit(list: List<Item>) {
         data.clear()
         data.addAll(list)
         notifyDataSetChanged()
     }
 
+    // ViewHolder class for item rows
     inner class ItemVH(val binding: RowReservedItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Item) {
             binding.itemName.text = item.name
+            // Set up long press listener for deletion
             (binding.root as? MaterialCardView)?.setOnLongClickListener {
                 onLongPressDelete?.invoke(item)
                 true
@@ -37,6 +40,7 @@ class ItemAdapter(
 
     override fun onBindViewHolder(holder: ItemVH, position: Int) = holder.bind(data[position])
 
+    // Return the total number of items
     override fun getItemCount(): Int = data.size
 }
 
