@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import ee.ut.cs.iotbazaar.R
-
+//right now not used, but in future used to display qr code action!
 class QrCodeResultFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
