@@ -1,13 +1,29 @@
 package ee.ut.cs.iotbazaar.data.entities
 
-import androidx.room.PrimaryKey
-import androidx.room.Entity
-
-// Entity class representing a User in the database
-// Defines the schema for the User table with fields for id, name, and age
-@Entity(tableName = "user")
+// Data class representing a User
+// Used for Firebase Firestore storage
 data class User(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String,
-    val age: Int
-)
+    val id: String = "", // Firebase document ID
+    val name: String = "",
+    val age: Int = 0
+) {
+    // No-arg constructor for Firebase
+    constructor() : this("", "", 0)
+
+    // Convert to Map for Firestore
+    fun toMap(): Map<String, Any> = hashMapOf(
+        "name" to name,
+        "age" to age
+    )
+
+    companion object {
+        // Create User from Firestore document
+        fun fromMap(id: String, map: Map<String, Any>): User {
+            return User(
+                id = id,
+                name = map["name"] as? String ?: "",
+                age = (map["age"] as? Long)?.toInt() ?: 0
+            )
+        }
+    }
+}

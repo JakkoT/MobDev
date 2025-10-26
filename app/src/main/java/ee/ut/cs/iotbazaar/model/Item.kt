@@ -1,12 +1,29 @@
 package ee.ut.cs.iotbazaar.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-// Room entity representing an IoT item that a user can reserve/borrow.
-@Entity(tableName = "item")
+// Data class representing an IoT item that a user can reserve/borrow.
+// Used for Firebase Firestore storage
 data class Item(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val name: String,
-    val reserved: Boolean = false //field indicating whether the item is currently reserved
-)
+    val id: String = "", // Firebase document ID
+    val name: String = "",
+    val reserved: Boolean = false
+) {
+    // No-arg constructor for Firebase
+    constructor() : this("", "", false)
+
+    // Convert to Map for Firestore
+    fun toMap(): Map<String, Any> = hashMapOf(
+        "name" to name,
+        "reserved" to reserved
+    )
+
+    companion object {
+        // Create Item from Firestore document
+        fun fromMap(id: String, map: Map<String, Any>): Item {
+            return Item(
+                id = id,
+                name = map["name"] as? String ?: "",
+                reserved = map["reserved"] as? Boolean ?: false
+            )
+        }
+    }
+}
