@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.google.scanner)
     implementation(libs.play.services)
+    implementation(libs.play.services.location)
     implementation(libs.androidx.activity)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)

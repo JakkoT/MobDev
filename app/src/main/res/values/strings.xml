@@ -5,4 +5,7 @@
     <string name="title_notifications">Inbox</string>
     <string name="camera">Camera</string>
     <string name="title_catalog">Catalogue</string>
+    <string name="delta_location_required">QR scanning is available only near the Delta building in Tartu.</string>
+    <string name="delta_location_unavailable">Unable to determine your location. Please try again outside or check your location settings.</string>
+    <string name="delta_location_permission_denied">Location permission is required to access the QR scanner near Delta.</string>
 </resources>
