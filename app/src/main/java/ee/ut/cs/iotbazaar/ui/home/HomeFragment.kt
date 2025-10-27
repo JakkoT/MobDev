@@ -169,8 +169,8 @@ class HomeFragment : Fragment() {
 
     companion object {
         private const val REQUEST_LOCATION_PERMISSION = 102
-        private const val DELTA_LATITUDE = 58.381958
-        private const val DELTA_LONGITUDE = 26.731563
+        private const val DELTA_LATITUDE = 58.38538
+        private const val DELTA_LONGITUDE = 26.72538
         private const val DELTA_RADIUS_METERS = 120f
     }
 }
