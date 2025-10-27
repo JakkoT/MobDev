@@ -7,7 +7,6 @@ plugins {
 android {
     namespace = "ee.ut.cs.iotbazaar"
     compileSdk = 36
-
     defaultConfig {
         applicationId = "ee.ut.cs.iotbazaar"
         minSdk = 34
@@ -58,7 +57,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
     implementation(platform(libs.firebase.bom))
 
     // Firebase services
@@ -66,6 +64,7 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.play.services.auth)
 
 
     implementation("androidx.camera:camera-core:1.5.0")
