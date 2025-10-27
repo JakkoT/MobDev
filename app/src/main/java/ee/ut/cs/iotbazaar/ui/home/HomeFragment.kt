@@ -4,14 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ee.ut.cs.iotbazaar.R
+import ee.ut.cs.iotbazaar.api.RetrofitClient
 import ee.ut.cs.iotbazaar.databinding.FragmentHomeBinding
+import ee.ut.cs.iotbazaar.model.Quote
 import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
 import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
 
@@ -66,7 +72,36 @@ class HomeFragment : Fragment() {
         binding.qrCodeBtn.setOnClickListener {
             findNavController().navigate(R.id.qrCodeScanner)
         }
+
+        // Fetch and display random quote
+        fetchRandomQuote()
+
         return root
+    }
+
+    private fun fetchRandomQuote() {
+        // Show loading state
+        binding.MOTD.text = "Loading quote..."
+
+        RetrofitClient.quoteApiService.getRandomQuote().enqueue(object : Callback<Quote> {
+            override fun onResponse(call: Call<Quote>, response: Response<Quote>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val quote = response.body()!!
+                    binding.MOTD.text = "\"${quote.quote}\"\n- ${quote.author}"
+                } else {
+                    binding.MOTD.text = "Failed to load quote. Please try again later."
+                }
+            }
+
+            override fun onFailure(call: Call<Quote>, t: Throwable) {
+                binding.MOTD.text = "No internet connection. Please check your network."
+                Toast.makeText(
+                    requireContext(),
+                    "Error: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     override fun onDestroyView() {

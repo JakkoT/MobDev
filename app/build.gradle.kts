@@ -66,6 +66,11 @@ dependencies {
     implementation(libs.firebase.storage.ktx)
     implementation(libs.play.services.auth)
 
+    // Retrofit for network calls
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.gson)
 
     implementation("androidx.camera:camera-core:1.5.0")
     implementation("androidx.camera:camera-camera2:1.5.0")
