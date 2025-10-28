@@ -17,6 +17,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import ee.ut.cs.iotbazaar.MainActivity
 import ee.ut.cs.iotbazaar.R
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.appcompat.app.AlertDialog
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -48,6 +53,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
         loginBtn.setOnClickListener {
+            if (!isInternetAvailable()) {
+                showNoInternetDialog()
+                return@setOnClickListener
+            }
+
             val email = emailField.text.toString().trim()
             val password = passwordField.text.toString().trim()
 
@@ -70,11 +80,18 @@ class LoginActivity : AppCompatActivity() {
                 }
         }
 
+
         // 🔹 Google login nupule vajutus
         googleSignInBtn.setOnClickListener {
+            if (!isInternetAvailable()) {
+                showNoInternetDialog()
+                return@setOnClickListener
+            }
+
             val signInIntent = googleSignInClient.signInIntent
             googleSignInLauncher.launch(signInIntent)
         }
+
     }
 
     // 🔹 Activity result launcher Google sisselogimiseks
@@ -96,6 +113,7 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    saveUserToFirestore()
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                             Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -114,4 +132,19 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
     }
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+    private fun showNoInternetDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("No Internet Connection")
+            .setMessage("Please check your internet connection and try again.")
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .setCancelable(false)
+            .show()
+    }
+
 }

@@ -5,7 +5,8 @@ package ee.ut.cs.iotbazaar.model
 data class Item(
     val id: String = "", // Firebase document ID
     val name: String = "",
-    val reserved: Boolean = false
+    val reserved: Boolean = false,
+    val stock: Int = 0
 ) {
     // No-arg constructor for Firebase
     constructor() : this("", "", false)
@@ -22,7 +23,8 @@ data class Item(
             return Item(
                 id = id,
                 name = map["name"] as? String ?: "",
-                reserved = map["reserved"] as? Boolean ?: false
+                reserved = map["reserved"] as? Boolean ?: false,
+                stock = map["stock"] as? Int ?: 1
             )
         }
     }

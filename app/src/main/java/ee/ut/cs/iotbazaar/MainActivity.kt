@@ -15,6 +15,11 @@ import androidx.navigation.ui.setupWithNavController
 import ee.ut.cs.iotbazaar.databinding.ActivityMainBinding
 import ee.ut.cs.iotbazaar.ui.home.ProfilePopupFragment
 import ee.ut.cs.iotbazaar.ui.user.UserViewModel
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.appcompat.app.AlertDialog
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -98,7 +103,36 @@ class MainActivity : AppCompatActivity() {
             intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
+        } else if (!isInternetAvailable()) {
+            // Kui internet puudub → log out ja suuna LoginActivity-sse
+            handleNoInternet()
         }
     }
+
+    private fun isInternetAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+    private fun handleNoInternet() {
+        AlertDialog.Builder(this)
+            .setTitle("No Internet Connection")
+            .setMessage("You are offline. Please check your internet connection.")
+            .setPositiveButton("OK") { _, _ ->
+                // Log out Firebase user
+                val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
+                auth.signOut()
+                // Suuna LoginActivity-sse
+                val intent = android.content.Intent(this, ee.ut.cs.iotbazaar.ui.Login.LoginActivity::class.java)
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+
 
 }
