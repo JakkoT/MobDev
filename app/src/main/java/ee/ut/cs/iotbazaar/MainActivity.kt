@@ -87,4 +87,18 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+    override fun onStart() {
+        super.onStart()
+
+        val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
+
+        // Kui kasutaja pole sisse loginud → suuna tagasi LoginActivity-sse
+        if (auth.currentUser == null) {
+            val intent = android.content.Intent(this, ee.ut.cs.iotbazaar.ui.Login.LoginActivity::class.java)
+            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
+    }
+
 }
