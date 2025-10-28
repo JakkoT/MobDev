@@ -26,8 +26,6 @@ import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
-import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
 
 class HomeFragment : Fragment() {
 
@@ -118,7 +116,7 @@ class HomeFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        })
+        })}
     private fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
