@@ -29,4 +29,5 @@ replay_pid*
 .gradle/
 .idea/
 .DS_Store
+google-services.json
 

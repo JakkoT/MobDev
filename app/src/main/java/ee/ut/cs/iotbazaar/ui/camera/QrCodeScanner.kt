@@ -99,7 +99,7 @@ class QrCodeScannerFragment : Fragment() {
             .build()
         scanner = GmsBarcodeScanning.getClient(requireContext(), options)
     }
-///scanning logic
+    ///scanning logic
     private fun startScanning() {
         //if scanner is not installed, return error
         if (!isScannerInstalled) {
@@ -147,4 +147,3 @@ class QrCodeScannerFragment : Fragment() {
         _binding = null
     }
 }
-
