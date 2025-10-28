@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Neutral surfaces -->
+    <color name="surface_base">#F5F5F7</color>
+    <color name="surface_elevated">#FFFFFFFF</color>
+    <color name="surface_subtle">#E5E5EA</color>
+    <color name="scrim_overlay">#CCF5F5F7</color>
+
+    <!-- Brand palette -->
+    <color name="brand_primary">#FF0A84FF</color>
+    <color name="brand_primary_dark">#FF0060DF</color>
+    <color name="brand_secondary">#FF5856D6</color>
+    <color name="brand_primary_tint">#E6F0FF</color>
+
+    <!-- Status palette -->
+    <color name="item_reserved_chip">#FFFCEDED</color>
+    <color name="item_reserved_text">#FFE04545</color>
+    <color name="item_available_chip">#FFF0FAF3</color>
+    <color name="item_available_text">#FF2F8C5E</color>
+
+    <!-- Accent surfaces -->
+    <color name="surface_accent">#F0F5FF</color>
+    <color name="surface_accent_secondary">#F7EDFF</color>
+
+    <!-- Content colors -->
+    <color name="text_primary">#FF1C1C1E</color>
+    <color name="text_secondary">#FF6E6E73</color>
+    <color name="text_disabled">#FFAEAEB2</color>
+
+    <!-- Legacy aliases -->
+    <color name="purple_200">@color/brand_secondary</color>
+    <color name="purple_500">@color/brand_primary</color>
+    <color name="purple_700">@color/brand_primary_dark</color>
+    <color name="teal_200">#FF64D2FF</color>
+    <color name="teal_700">#FF007A7C</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

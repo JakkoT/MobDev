@@ -1,89 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:background="@android:color/transparent"
+    android:fillViewport="true"
     tools:context=".ui.catalog.CatalogFragment">
 
-    <TextView
-        android:id="@+id/catalogTitle"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Catalogue"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/itemNameLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/catalogTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/itemNameInput"
+        <LinearLayout
+            android:id="@+id/catalogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Item name" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp">
 
-    <!-- Uus "Reserved" plokk: silt + lüliti -->
-    <LinearLayout
-        android:id="@+id/reservedGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@id/itemNameLayout"
-        app:layout_constraintStart_toStartOf="parent">
+            <ImageButton
+                android:id="@+id/catalogBackButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/nav_back"
+                android:padding="4dp"
+                android:src="@drawable/ic_back_chevron"
+                android:tint="@color/text_primary"
+                android:scaleType="centerInside" />
 
-        <TextView
-            android:id="@+id/reservedLabel"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingStart="8dp"
+                android:text="@string/title_catalog"
+                android:textColor="@color/text_primary"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.01" />
+
+            <ImageButton
+                android:id="@+id/catalogProfileButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/profile_options"
+                android:padding="4dp"
+                android:src="@drawable/profile_icon_circle"
+                android:scaleType="centerInside" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Reserved"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginTop="16dp">
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/reservedSwitch"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemNameLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                app:boxBackgroundColor="@color/surface_elevated"
+                app:boxStrokeColor="@color/surface_subtle"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:boxCornerRadiusTopStart="18dp"
+                app:boxCornerRadiusTopEnd="18dp"
+                app:boxCornerRadiusBottomStart="18dp"
+                app:boxCornerRadiusBottomEnd="18dp"
+                app:hintTextColor="@color/text_secondary"
+                android:layout_marginEnd="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/reservedSwitch"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemNameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Item name"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/reservedSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Reserved"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:background="@drawable/bg_reserved_toggle"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/itemNameLayout"
+                app:layout_constraintBottom_toBottomOf="@id/itemNameLayout"
+                app:useMaterialThemeColors="false" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addItemButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="Toggle reserved state"
-            android:text="" />
+            android:layout_marginTop="20dp"
+            android:enabled="false"
+            android:text="Add item"
+            style="@style/Widget.IOTBazaar.Button" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/catalogListCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/surface_elevated">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/catalogRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:clipChildren="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingStart="8dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="24dp"
+                tools:listitem="@layout/row_reserved_item" />
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/addItemButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Add"
-        android:enabled="false"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/reservedGroup"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/catalogRecycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:paddingBottom="96dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/addItemButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/row_reserved_item" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
