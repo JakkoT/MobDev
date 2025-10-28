@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Custom component styles for Material Design basics -->
+    <!-- Minimal, rounded primary button -->
     <style name="Widget.IOTBazaar.Button" parent="Widget.MaterialComponents.Button">
-        <item name="cornerRadius">16dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="backgroundTint">@color/brand_primary</item>
+        <item name="rippleColor">@color/brand_primary_dark</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
     </style>
 
+    <!-- Floating action button accent -->
     <style name="Widget.IOTBazaar.Fab" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="backgroundTint">@color/purple_500</item>
-        <item name="rippleColor">@color/teal_200</item>
+        <item name="backgroundTint">@color/brand_primary</item>
+        <item name="rippleColor">@color/brand_primary_dark</item>
+    </style>
+
+    <!-- Soft, low elevation cards -->
+    <style name="Widget.IOTBazaar.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/surface_subtle</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="rippleColor">@color/brand_primary</item>
     </style>
 </resources>

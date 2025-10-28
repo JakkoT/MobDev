@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import ee.ut.cs.iotbazaar.R
@@ -46,5 +48,14 @@ class ProfilePopupFragment : BottomSheetDialogFragment() {
             dismiss()              // sulgeb popupi, kui see on DialogFragment
         }
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (dialog as? BottomSheetDialog)?.behavior?.apply {
+            state = BottomSheetBehavior.STATE_EXPANDED
+            skipCollapsed = true
+            isDraggable = true
+        }
     }
 }

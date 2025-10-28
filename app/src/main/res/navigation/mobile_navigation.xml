@@ -43,7 +43,7 @@
     <fragment
         android:id="@+id/navigation_account"
         android:name="ee.ut.cs.iotbazaar.ui.account.AccountFragment"
-        android:label="Account"
+        android:label="@string/title_account"
         tools:layout="@layout/fragment_account" />
 
     <fragment
@@ -55,7 +55,7 @@
     <fragment
         android:id="@+id/navigation_settings"
         android:name="ee.ut.cs.iotbazaar.ui.settings.SettingsFragment"
-        android:label="Settings"
+        android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
 
     <fragment

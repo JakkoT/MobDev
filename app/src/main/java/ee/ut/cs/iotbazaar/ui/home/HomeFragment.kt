@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -53,9 +54,16 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        binding.homeProfileButton.setOnClickListener {
+            ProfilePopupFragment().show(parentFragmentManager, "ProfilePopupFragment")
+        }
+
         // Setup reserved items RecyclerView
         binding.reservedItemsRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
+            // Allow internal scrolling within fixed height container
+            isNestedScrollingEnabled = true
+            setHasFixedSize(true)
             adapter = itemAdapter
         }
 
@@ -126,11 +134,16 @@ class HomeFragment : Fragment() {
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun verifyDeltaLocationAndNavigate() {
+        updateLocationLoading(true)
         // Use HIGH_ACCURACY to better force a GPS lock
         fusedLocationClient
             .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
             .addOnSuccessListener { location ->
+                if (_binding == null) {
+                    return@addOnSuccessListener
+                }
                 if (location == null) {
+                    updateLocationLoading(false)
                     // CASE 1: Location is null (e.g., indoors, emulator no location)
                     Toast.makeText(
                         requireContext(),
@@ -142,9 +155,11 @@ class HomeFragment : Fragment() {
 
                 // CASE 2: We have a location. Now we check the distance.
                 if (isWithinDelta(location)) {
+                    updateLocationLoading(false)
                     // User is inside the radius
                     navigateToQrScanner()
                 } else {
+                    updateLocationLoading(false)
                     // CASE 3: We have a location, but it's too far away.
                     Toast.makeText(
                         requireContext(),
@@ -154,6 +169,10 @@ class HomeFragment : Fragment() {
                 }
             }
             .addOnFailureListener {
+                if (_binding == null) {
+                    return@addOnFailureListener
+                }
+                updateLocationLoading(false)
                 // CASE 4: The location request failed (e.g., user turned off GPS)
                 Toast.makeText(
                     requireContext(),
@@ -161,6 +180,13 @@ class HomeFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+    }
+
+    private fun updateLocationLoading(show: Boolean) {
+        _binding?.let { binding ->
+            binding.locationLoadingOverlay.isVisible = show
+            binding.qrCodeBtn.isEnabled = !show
+        }
     }
 
     private fun isWithinDelta(userLocation: Location): Boolean {
@@ -172,6 +198,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToQrScanner() {
+        updateLocationLoading(false)
         findNavController().navigate(R.id.qrCodeScanner)
     }
 

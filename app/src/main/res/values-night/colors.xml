@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="surface_base">#1C1C1E</color>
+    <color name="surface_elevated">#2C2C34</color>
+    <color name="surface_subtle">#3A3A42</color>
+    <color name="scrim_overlay">#B31C1C1E</color>
+
+    <color name="text_primary">#F2F2F7</color>
+    <color name="text_secondary">#C7C7CC</color>
+    <color name="text_disabled">#6F6F73</color>
+    <color name="brand_primary_tint">#1A2A3F</color>
+    <color name="surface_accent">#1F2330</color>
+    <color name="surface_accent_secondary">#272C3A</color>
+    <color name="item_reserved_chip">#3A2324</color>
+    <color name="item_reserved_text">#FF928587</color>
+    <color name="item_available_chip">#253930</color>
+    <color name="item_available_text">#FF8AD9A8</color>
+</resources>

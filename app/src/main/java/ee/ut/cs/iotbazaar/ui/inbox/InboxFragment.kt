@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import ee.ut.cs.iotbazaar.R
 import ee.ut.cs.iotbazaar.databinding.FragmentInboxBinding
+import ee.ut.cs.iotbazaar.ui.home.ProfilePopupFragment
 import ee.ut.cs.iotbazaar.ui.user.UserViewModel
+import androidx.navigation.fragment.findNavController
 
 class InboxFragment : Fragment() {
 
@@ -35,6 +36,14 @@ class InboxFragment : Fragment() {
         binding.userRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = inboxAdapter
+        }
+
+        binding.inboxProfileButton.setOnClickListener {
+            ProfilePopupFragment().show(parentFragmentManager, "ProfilePopupFragment")
+        }
+
+        binding.inboxBackButton.setOnClickListener {
+            findNavController().navigateUp()
         }
 
         viewModel.users.observe(viewLifecycleOwner) { users ->

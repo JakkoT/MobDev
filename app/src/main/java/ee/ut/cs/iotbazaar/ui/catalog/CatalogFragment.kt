@@ -10,9 +10,12 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import ee.ut.cs.iotbazaar.R
 import ee.ut.cs.iotbazaar.databinding.FragmentCatalogBinding
+import ee.ut.cs.iotbazaar.ui.home.ProfilePopupFragment
 import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
 import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
+import androidx.navigation.fragment.findNavController
 
 // Fragment showing the full catalogue of items + add form
 class CatalogFragment : Fragment() {
@@ -56,6 +59,14 @@ class CatalogFragment : Fragment() {
             pendingScrollToBottom = false
         }
         itemViewModel.ensureReservedSeedItems()
+
+        binding.catalogProfileButton.setOnClickListener {
+            ProfilePopupFragment().show(parentFragmentManager, "ProfilePopupFragment")
+        }
+
+        binding.catalogBackButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
         // Text change validation
         binding.itemNameInput.doOnTextChanged { text, _, _, _ ->

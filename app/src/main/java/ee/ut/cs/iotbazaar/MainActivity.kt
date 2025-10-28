@@ -2,8 +2,6 @@ package ee.ut.cs.iotbazaar
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -13,7 +11,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import ee.ut.cs.iotbazaar.databinding.ActivityMainBinding
-import ee.ut.cs.iotbazaar.ui.home.ProfilePopupFragment
 import ee.ut.cs.iotbazaar.ui.user.UserViewModel
 import android.content.Context
 import android.net.ConnectivityManager
@@ -31,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.topAppBar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val navView: BottomNavigationView = binding.navView
 
@@ -41,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            binding.topAppBar.title = ""
+            binding.topAppBar.navigationIcon = null
+        }
 
         // Explicit navigation handling to ensure Home always works
         navView.setOnItemSelectedListener { item ->
@@ -71,21 +75,6 @@ class MainActivity : AppCompatActivity() {
 
         // Seed a default user if none exists
         viewModel.addUserIfNotExists("Jakko", 22)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_profile -> {
-                ProfilePopupFragment().show(supportFragmentManager, "ProfilePopupFragment")
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

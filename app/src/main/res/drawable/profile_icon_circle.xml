@@ -3,7 +3,7 @@
     android:width="24dp"
     android:viewportHeight="960"
     android:viewportWidth="960"
-    android:tint="#FFFFFF">
+    android:tint="@color/text_primary">
     <!-- Removed previous black tint; path already white -->
     <path
         android:fillColor="@android:color/white"
