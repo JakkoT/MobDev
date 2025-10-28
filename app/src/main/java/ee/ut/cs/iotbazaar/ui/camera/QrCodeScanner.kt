@@ -1,14 +1,18 @@
 package ee.ut.cs.iotbazaar.ui.camera
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.moduleinstall.ModuleInstall
 import com.google.android.gms.common.moduleinstall.ModuleInstallRequest
@@ -16,7 +20,10 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
+import ee.ut.cs.iotbazaar.R
 import ee.ut.cs.iotbazaar.databinding.FragmentQrCodeScannerBinding
+import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
+import kotlinx.coroutines.launch
 
 class QrCodeScannerFragment : Fragment() {
 
@@ -26,14 +33,19 @@ class QrCodeScannerFragment : Fragment() {
     private lateinit var scanner: GmsBarcodeScanner
     private var isScannerInstalled = false
 
+    private lateinit var itemViewModel: ItemViewModel
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View {
         _binding = FragmentQrCodeScannerBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        // Initialize ViewModel
+        itemViewModel = ViewModelProvider(this).get(ItemViewModel::class.java)
         // System bar padding
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -100,6 +112,27 @@ class QrCodeScannerFragment : Fragment() {
                 val result = barcode.rawValue ?: "Tühi väärtus"
                 binding.scannedValueTv.text = "Skaneeritud väärtus:\n$result"
                 Toast.makeText(requireContext(), "Skaneeritud: $result", Toast.LENGTH_SHORT).show()
+
+                val textName = binding.qrName
+                val textReserved = binding.qrReserved
+                textName.text = "Laeb eseme andmeid..."
+                textReserved.text = ""
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        val item = itemViewModel.getItem(result)
+
+                        if (item != null) {
+                            textName.text = "Nimi: ${item.name}"
+                            textReserved.text = if (item.reserved) "Staatus: Reserveeritud" else "Staatus: Vaba"
+                        } else {
+                            textName.text = "Eseme andmeid ei leitud."
+                            textReserved.text = "Dokument ID: $result ei eksisteeri"
+                        }
+                    } catch (e: Exception) {
+                        textName.text = "Viga andmete laadimisel"
+                        textReserved.text = "Error: ${e.message}"
+                    }
+                }
             }
             .addOnCanceledListener { //was canceled before scanning
                 Toast.makeText(requireContext(), "Tühistatud", Toast.LENGTH_SHORT).show()

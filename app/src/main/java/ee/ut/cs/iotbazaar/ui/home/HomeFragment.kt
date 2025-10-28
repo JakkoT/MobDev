@@ -18,7 +18,14 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import ee.ut.cs.iotbazaar.R
+import ee.ut.cs.iotbazaar.api.RetrofitClient
 import ee.ut.cs.iotbazaar.databinding.FragmentHomeBinding
+import ee.ut.cs.iotbazaar.model.Quote
+import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
+import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
 import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
 
@@ -82,9 +89,36 @@ class HomeFragment : Fragment() {
                 requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_PERMISSION)
             }
         }
+
+        // Fetch and display random quote
+        fetchRandomQuote()
+
         return root
     }
 
+    private fun fetchRandomQuote() {
+        // Show loading state
+        binding.MOTD.text = "Loading quote..."
+
+        RetrofitClient.quoteApiService.getRandomQuote().enqueue(object : Callback<Quote> {
+            override fun onResponse(call: Call<Quote>, response: Response<Quote>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val quote = response.body()!!
+                    binding.MOTD.text = "\"${quote.quote}\"\n- ${quote.author}"
+                } else {
+                    binding.MOTD.text = "Failed to load quote. Please try again later."
+                }
+            }
+
+            override fun onFailure(call: Call<Quote>, t: Throwable) {
+                binding.MOTD.text = "No internet connection. Please check your network."
+                Toast.makeText(
+                    requireContext(),
+                    "Error: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     private fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
