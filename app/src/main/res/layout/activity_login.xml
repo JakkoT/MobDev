@@ -14,7 +14,7 @@
 
     <EditText
         android:id="@+id/passwordField"
-        android:hint="Parool"
+        android:hint="Password"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
 
     <Button
         android:id="@+id/loginBtn"
-        android:text="Logi sisse"
+        android:text="Log in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"/>
@@ -31,6 +31,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp" />
+    <Button
+        android:id="@+id/registerRedirectBtn"
+        android:text="Make new account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"/>
+
 
 
 </LinearLayout>

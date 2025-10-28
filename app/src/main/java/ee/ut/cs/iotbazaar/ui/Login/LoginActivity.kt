@@ -41,13 +41,18 @@ class LoginActivity : AppCompatActivity() {
         val passwordField = findViewById<EditText>(R.id.passwordField)
         val loginBtn = findViewById<Button>(R.id.loginBtn)
         val googleSignInBtn = findViewById<com.google.android.gms.common.SignInButton>(R.id.googleSignInBtn)
+        val registerRedirectBtn = findViewById<Button>(R.id.registerRedirectBtn)
+        registerRedirectBtn.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+            finish()
+        }
 
         loginBtn.setOnClickListener {
             val email = emailField.text.toString().trim()
             val password = passwordField.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Täida kõik väljad", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Provide all the information", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -60,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     } else {
-                        Toast.makeText(this, "Vale email või parool", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Wrong email or password", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
@@ -81,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
             val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
             firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
-            Toast.makeText(this, "Google login ebaõnnestus", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Google login failed", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -97,7 +102,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this, "Firebase login ebaõnnestus", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Firebase login failed", Toast.LENGTH_SHORT).show()
                 }
             }
     }

@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IOTBazaar">
+        <activity android:name=".ui.Login.RegisterActivity" />
         <activity
             android:name=".ui.Login.LoginActivity"
             android:exported="true">
