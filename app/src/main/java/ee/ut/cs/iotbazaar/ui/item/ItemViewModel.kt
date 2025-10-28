@@ -18,6 +18,10 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addItem(name: String) = addItem(name, false)
 
+    suspend fun getItem(id: String): Item? {
+        return repository.getItemById(id)
+    }
+
     fun addItem(name: String, reserved: Boolean) = viewModelScope.launch {
         repository.insert(name, reserved)
     }

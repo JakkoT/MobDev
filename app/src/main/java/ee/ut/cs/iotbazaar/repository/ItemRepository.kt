@@ -144,4 +144,22 @@ class ItemRepository(
             false
         }
     }
+
+    suspend fun getItemById(id: String): Item? {
+        return try {
+            val doc = firestore.collection(COLLECTION_NAME)
+                .document(id)
+                .get()
+                .await()
+
+            if (doc.exists()) {
+                val item = Item.fromMap(doc.id, doc.data ?: emptyMap())
+                item
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 }
