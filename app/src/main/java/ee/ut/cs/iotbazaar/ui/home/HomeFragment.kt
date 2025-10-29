@@ -49,6 +49,7 @@ class HomeFragment : Fragment() {
     ): View {
         val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
+        // Initialize ItemViewModel that interacts with the database
         itemViewModel = ViewModelProvider(this).get(ItemViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -106,7 +107,9 @@ class HomeFragment : Fragment() {
         // Show loading state
         binding.MOTD.text = "Loading quote..."
 
+        // Make API call
         RetrofitClient.quoteApiService.getRandomQuote().enqueue(object : Callback<Quote> {
+            // Handle successful response
             override fun onResponse(call: Call<Quote>, response: Response<Quote>) {
                 if (response.isSuccessful && response.body() != null) {
                     val quote = response.body()!!
@@ -115,7 +118,7 @@ class HomeFragment : Fragment() {
                     binding.MOTD.text = "Failed to load quote. Please try again later."
                 }
             }
-
+            // Handle failure
             override fun onFailure(call: Call<Quote>, t: Throwable) {
                 binding.MOTD.text = "No internet connection. Please check your network."
                 Toast.makeText(

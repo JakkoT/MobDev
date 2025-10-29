@@ -3,17 +3,24 @@ package ee.ut.cs.iotbazaar.api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+// Object to provide Retrofit instance and QuoteApiService
 object RetrofitClient {
+    // Base URL for the API
     private const val BASE_URL = "https://dummyjson.com/"
 
-    private val retrofit: Retrofit by lazy {
+    // Initialize Retrofit instance
+    private val retrofit: Retrofit by lazy { // Lazy means it will be created only when first accessed
+        // Build Retrofit with base URL and Gson converter
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            // Add Gson converter for JSON serialization/deserialization
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
+    // Provide QuoteApiService instance
     val quoteApiService: QuoteApiService by lazy {
+        // Create implementation of QuoteApiService using Retrofit
         retrofit.create(QuoteApiService::class.java)
     }
 }

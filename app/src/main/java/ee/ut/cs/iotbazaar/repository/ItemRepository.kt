@@ -13,37 +13,44 @@ import kotlinx.coroutines.tasks.await
  * No Room database - all data stored in cloud.
     */
 class ItemRepository(
+    // Firestore instance
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
     private val TAG = "ItemRepository"
+    // Firestore collection name
     private val COLLECTION_NAME = "items"
 
     /**
      * Get all items as a Flow with real-time updates
      */
     fun getAllItems(): Flow<List<Item>> = callbackFlow {
+        // Listen to Firestore collection changes
         val listener = firestore.collection(COLLECTION_NAME)
             .addSnapshotListener { snapshot, error ->
+                // Handle errors
                 if (error != null) {
                     Log.e(TAG, "Error listening to items: ${error.message}")
                     close(error)
                     return@addSnapshotListener
                 }
-
+                // Parse documents to Item objects
                 if (snapshot != null) {
+                    // Map documents to Item instances, handling parsing errors
                     val items = snapshot.documents.mapNotNull { doc ->
                         try {
+                            // Use fromMap to create Item
                             Item.fromMap(doc.id, doc.data ?: emptyMap())
                         } catch (e: Exception) {
                             Log.e(TAG, "Error parsing item: ${e.message}")
                             null
                         }
                     }
+                    // Send updated list to the Flow
                     trySend(items)
                     Log.d(TAG, "Fetched ${items.size} items from Firestore")
                 }
             }
-
+        // Clean up listener on Flow cancellation
         awaitClose { listener.remove() }
     }
 
@@ -51,15 +58,17 @@ class ItemRepository(
      * Insert a new item to Firestore
      */
     suspend fun insert(name: String, reserved: Boolean = false): Result<String> {
+        // Return Result with new document ID or error
         return try {
             val data = hashMapOf(
                 "name" to name,
                 "reserved" to reserved,
                 "createdAt" to com.google.firebase.Timestamp.now()
             )
-
+            // Add document to Firestore
             val docRef = firestore.collection(COLLECTION_NAME).add(data).await()
             Log.d(TAG, "Item inserted: $name (ID: ${docRef.id})")
+            // Return the new document ID
             Result.success(docRef.id)
         } catch (e: Exception) {
             Log.e(TAG, "Error inserting item: ${e.message}")
@@ -72,7 +81,9 @@ class ItemRepository(
      */
     suspend fun delete(item: Item): Result<Unit> {
         return try {
+            // Ensure item has a valid ID
             if (item.id.isNotEmpty()) {
+                // Delete document by ID
                 firestore.collection(COLLECTION_NAME)
                     .document(item.id)
                     .delete()
@@ -94,12 +105,13 @@ class ItemRepository(
     suspend fun update(item: Item): Result<Unit> {
         return try {
             if (item.id.isNotEmpty()) {
+                // Prepare updated data
                 val data = hashMapOf(
                     "name" to item.name,
                     "reserved" to item.reserved,
                     "updatedAt" to com.google.firebase.Timestamp.now()
                 )
-
+                // Update document by ID
                 firestore.collection(COLLECTION_NAME)
                     .document(item.id)
                     .update(data as Map<String, Any>)
@@ -121,6 +133,7 @@ class ItemRepository(
     suspend fun count(): Int {
         return try {
             val snapshot = firestore.collection(COLLECTION_NAME).get().await()
+            // Return the number of documents
             snapshot.size()
         } catch (e: Exception) {
             Log.e(TAG, "Error counting items: ${e.message}")
@@ -133,6 +146,7 @@ class ItemRepository(
      */
     suspend fun exists(name: String): Boolean {
         return try {
+            // Query Firestore for item with matching name
             val snapshot = firestore.collection(COLLECTION_NAME)
                 .whereEqualTo("name", name)
                 .limit(1)
@@ -144,7 +158,7 @@ class ItemRepository(
             false
         }
     }
-
+    // Get item by ID as Item
     suspend fun getItemById(id: String): Item? {
         return try {
             val doc = firestore.collection(COLLECTION_NAME)
