@@ -11,12 +11,14 @@ import kotlinx.coroutines.tasks.await
 /**
  * Repository for Item data using Firebase Firestore only.
  * No Room database - all data stored in cloud.
-    */
+ */
 class ItemRepository(
-    // Firestore instance
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    // Accept an optional Firestore instance to facilitate testing; if null, resolve lazily.
+    private val providedFirestore: FirebaseFirestore? = null
 ) {
     private val TAG = "ItemRepository"
+    // Lazily initialize Firestore to avoid evaluating getInstance() at call site (important for tests)
+    private val firestore: FirebaseFirestore by lazy { providedFirestore ?: FirebaseFirestore.getInstance() }
     // Firestore collection name
     private val COLLECTION_NAME = "items"
 

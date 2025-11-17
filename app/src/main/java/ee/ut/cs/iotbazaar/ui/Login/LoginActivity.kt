@@ -21,6 +21,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.appcompat.app.AlertDialog
+import ee.ut.cs.iotbazaar.theme.ThemePreferences
 
 
 class LoginActivity : AppCompatActivity() {
@@ -29,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Apply user-selected theme before view inflation
+        ThemePreferences.applySavedMode(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
@@ -53,16 +56,18 @@ class LoginActivity : AppCompatActivity() {
         }
 
         loginBtn.setOnClickListener {
-            if (!isInternetAvailable()) {
-                showNoInternetDialog()
-                return@setOnClickListener
-            }
-
             val email = emailField.text.toString().trim()
             val password = passwordField.text.toString().trim()
 
+            // Validate form first (deterministic UI feedback without network)
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Provide all the information", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Then check connectivity before remote calls
+            if (!isInternetAvailable()) {
+                showNoInternetDialog()
                 return@setOnClickListener
             }
 

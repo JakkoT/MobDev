@@ -7,7 +7,7 @@
     <string name="title_catalog">Catalogue</string>
     <string name="title_account">Account</string>
     <string name="title_settings">Settings</string>
-    <string name="checking_location">Checking your location...</string>
+    <string name="checking_location">Checking your location…</string>
     <string name="status_reserved">Reserved</string>
     <string name="status_available">Available</string>
     <string name="delta_location_required">QR scanning is available only near the Delta building in Tartu.</string>
@@ -20,4 +20,15 @@
     <string name="account_greeting_generic">Hello!</string>
     <string name="account_details_generic">Keep exploring our catalogue to discover new devices.</string>
     <string name="logged_out_message">You have been logged out.</string>
+
+    <!-- Dark/light mode settings -->
+    <string name="pref_dark_mode">Dark mode</string>
+
+    <!-- Placeholder settings labels -->
+    <string name="placeholder_setting_a">• Placeholder setting A</string>
+    <string name="placeholder_setting_b">• Placeholder setting B</string>
+
+    <!-- QR scanner -->
+    <string name="qr_waiting">Ootan skannimist…</string>
+    <string name="loading">Laen…</string>
 </resources>

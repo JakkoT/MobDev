@@ -26,7 +26,7 @@
             android:contentDescription="@string/nav_back"
             android:padding="4dp"
             android:src="@drawable/ic_back_chevron"
-            android:tint="@color/text_primary"
+            app:tint="@color/text_primary"
             android:scaleType="centerInside" />
 
         <TextView
@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:text="@string/title_settings"
             android:textColor="@color/text_primary"
             android:textSize="24sp"
@@ -48,6 +49,7 @@
             android:contentDescription="@string/profile_options"
             android:padding="4dp"
             android:src="@drawable/profile_icon_circle"
+            app:tint="@color/text_primary"
             android:scaleType="centerInside" />
     </LinearLayout>
 
@@ -68,16 +70,49 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <!-- Dark mode row -->
+            <LinearLayout
+                android:id="@+id/themeRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/themeLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/pref_dark_mode"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/darkModeSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="@color/surface_subtle" />
+
+            <!-- placeholder settings -->
             <TextView
                 android:id="@+id/setting1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="• Placeholder setting A" />
+                android:text="@string/placeholder_setting_a" />
             <TextView
                 android:id="@+id/setting2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="• Placeholder setting B"
+                android:text="@string/placeholder_setting_b"
                 android:paddingTop="4dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

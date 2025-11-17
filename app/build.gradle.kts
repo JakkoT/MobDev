@@ -36,6 +36,14 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
+
+    packaging {
+        resources.excludes.add("META-INF/LICENSE.md")
+        resources.excludes.add("META-INF/LICENSE-notice.md")
+    }
 }
 
 dependencies {
@@ -79,6 +87,14 @@ dependencies {
     implementation("androidx.camera:camera-view:1.5.0")
     implementation("androidx.camera:camera-extensions:1.5.0")
 
-
-
+    // Testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.12.2")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.fragment:fragment-testing:1.8.3")
+    // Optional if you later observe LiveData synchronously:
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("io.mockk:mockk:1.13.12") // For mocking
+    androidTestImplementation("io.mockk:mockk-android:1.13.12")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // For coroutine testing
 }

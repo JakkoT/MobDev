@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="@android:color/white">
+    android:background="@color/surface_base">
 
     <TextView
         android:id="@+id/qrResultText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Laen..."
+        android:text="@string/loading"
         android:textSize="18sp"
-        android:textColor="@android:color/black"
+        android:textColor="@color/text_primary"
         android:gravity="center" />
 
 </FrameLayout>

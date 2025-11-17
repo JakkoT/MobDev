@@ -16,6 +16,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.appcompat.app.AlertDialog
+import ee.ut.cs.iotbazaar.theme.ThemePreferences
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Apply user-selected theme before view inflation
+        ThemePreferences.applySavedMode(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
