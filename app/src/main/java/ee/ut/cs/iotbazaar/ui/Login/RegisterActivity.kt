@@ -11,10 +11,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.appcompat.app.AlertDialog
+import ee.ut.cs.iotbazaar.theme.ThemePreferences
 class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Apply user-selected theme before view inflation
+        ThemePreferences.applySavedMode(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 

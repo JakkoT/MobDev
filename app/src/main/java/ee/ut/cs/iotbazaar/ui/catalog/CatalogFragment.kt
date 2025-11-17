@@ -10,7 +10,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import ee.ut.cs.iotbazaar.R
 import ee.ut.cs.iotbazaar.databinding.FragmentCatalogBinding
 import ee.ut.cs.iotbazaar.ui.home.ProfilePopupFragment
 import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
