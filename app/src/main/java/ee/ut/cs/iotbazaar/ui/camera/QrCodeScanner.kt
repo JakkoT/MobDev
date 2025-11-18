@@ -16,6 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.moduleinstall.ModuleInstall
 import com.google.android.gms.common.moduleinstall.ModuleInstallRequest
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
@@ -68,6 +70,23 @@ class QrCodeScannerFragment : Fragment() {
                 }
             }
         )
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+
+
+
+        itemViewModel.reserveResult.observe(viewLifecycleOwner) { result ->
+            result.onSuccess {
+                Toast.makeText(requireContext(), "Eseme reserveerimine õnnestus", Toast.LENGTH_SHORT).show()
+                binding.btnReserve.visibility = View.GONE
+            }.onFailure { e ->
+                Toast.makeText(requireContext(), "Reserveerimine ebaõnnestus: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
 
         // Install Google QR Scanner and start scanning immediately
         installGoogleScanner()
@@ -112,7 +131,7 @@ class QrCodeScannerFragment : Fragment() {
                 val result = barcode.rawValue ?: "Tühi väärtus"
                 binding.scannedValueTv.text = "Skaneeritud väärtus:\n$result"
                 Toast.makeText(requireContext(), "Skaneeritud: $result", Toast.LENGTH_SHORT).show()
-
+                binding.btnReserve.visibility = View.GONE
                 val textName = binding.qrName
                 val textReserved = binding.qrReserved
                 textName.text = "Laeb eseme andmeid..."
@@ -124,6 +143,22 @@ class QrCodeScannerFragment : Fragment() {
                         if (item != null) {
                             textName.text = "Nimi: ${item.name}"
                             textReserved.text = if (item.reserved) "Staatus: Reserveeritud" else "Staatus: Vaba"
+                            if (!item.reserved && item.stock > 0) {
+                                binding.btnReserve.visibility = View.VISIBLE
+                                binding.btnReserve.setOnClickListener {
+                                    val userId = FirebaseAuth.getInstance().currentUser?.uid
+                                    if (userId == null) {
+                                        Toast.makeText(requireContext(), "Kasutaja ei ole sisse logitud", Toast.LENGTH_SHORT).show()
+                                        return@setOnClickListener
+                                    }
+
+                                    val returnDate = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000
+                                    itemViewModel.reserveItemForCurrentUser( item.id, returnDate)
+                                }
+                                }
+                                else {
+                                    binding.btnReserve.visibility = View.GONE
+                                }
                         } else {
                             textName.text = "Eseme andmeid ei leitud."
                             textReserved.text = "Dokument ID: $result ei eksisteeri"

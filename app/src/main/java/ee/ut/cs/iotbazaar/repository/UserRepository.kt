@@ -2,6 +2,7 @@ package ee.ut.cs.iotbazaar.repository
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import ee.ut.cs.iotbazaar.data.entities.User
@@ -17,7 +18,7 @@ class UserRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
     private val TAG = "UserRepository"
-    private val COLLECTION_NAME = "users"
+    private val COLLECTION_NAME = "users_real"
 
     /**
      * Get all users as a Flow with real-time updates
@@ -139,29 +140,4 @@ class UserRepository(
             Result.failure(e)
         }
     }
-}
-fun addTakenItemToUser(itemId: String, returnDateMillis: Long, onResult: (Boolean) -> Unit) {
-    val db = FirebaseFirestore.getInstance()
-    val user = FirebaseAuth.getInstance().currentUser ?: run {
-        onResult(false)
-        return
-    }
-
-    val userRef = db.collection("users").document(user.uid)
-
-    val takenItemMap = mapOf(
-        "itemId" to itemId,
-        "returnDate" to returnDateMillis
-    )
-
-    // Lisa massiivi
-    userRef.update("takenItems", com.google.firebase.firestore.FieldValue.arrayUnion(takenItemMap))
-        .addOnSuccessListener { onResult(true) }
-        .addOnFailureListener { e ->
-            // Kui massiivi field veel ei eksisteeri, loo see
-            val data = mapOf("takenItems" to listOf(takenItemMap))
-            userRef.set(data, SetOptions.merge())
-                .addOnSuccessListener { onResult(true) }
-                .addOnFailureListener { onResult(false) }
-        }
 }

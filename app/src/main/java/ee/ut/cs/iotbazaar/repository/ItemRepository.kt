@@ -178,4 +178,69 @@ class ItemRepository(
             null
         }
     }
+    /**
+     * Reserve item: decreases stock by 1 if available and sets reserved=true.
+     */
+    suspend fun reserveItemForUser(userId: String, itemId: String, returnDate: Long): Result<Unit> {
+        return try {
+            val db = FirebaseFirestore.getInstance()
+            val userRef = db.collection("users_real").document(userId)
+            val itemRef = db.collection("items").document(itemId)
+
+            db.runTransaction { transaction ->
+
+                // Loe või loo user dokumendi transactioni sees
+                val userSnap = try {
+                    transaction.get(userRef)
+                } catch (e: Exception) {
+                    // Kui dokument puudub, loo see tühja takenItems listiga
+                    transaction.set(userRef, mapOf("takenItems" to emptyList<Map<String, Any>>()))
+                    transaction.get(userRef)
+                }
+
+                // Loe item dokumendi transactioni sees
+                val itemSnap = transaction.get(itemRef)
+                if (!itemSnap.exists()) throw Exception("Item does not exist")
+
+                val stock = itemSnap.getLong("stock")?.toInt() ?: 0
+                if (stock <= 0) throw Exception("Item out of stock")
+
+                val newStock = stock - 1
+                val shouldReserve = newStock == 0
+
+                transaction.update(itemRef, mapOf(
+                    "stock" to newStock,
+                    "reserved" to shouldReserve,
+                    "updatedAt" to com.google.firebase.Timestamp.now()
+                ))
+
+                val takenItems = userSnap.get("takenItems") as? List<Map<String, Any>> ?: emptyList()
+
+                val updatedTakenItems = if (takenItems.any { it["itemId"] == itemId }) {
+                    takenItems.map {
+                        if (it["itemId"] == itemId) {
+                            it.toMutableMap().apply {
+                                this["stock"] = ((this["stock"] as? Long ?: 0) + 1)
+                                this["returnDate"] = returnDate
+                            }
+                        } else it
+                    }
+                } else {
+                    takenItems + listOf(mapOf(
+                        "itemId" to itemId,
+                        "stock" to 1,
+                        "returnDate" to returnDate
+                    ))
+                }
+
+                transaction.update(userRef, "takenItems", updatedTakenItems)
+            }.await()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
 }

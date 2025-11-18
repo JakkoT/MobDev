@@ -14,7 +14,8 @@ data class Item(
     // Convert to Map for Firestore
     fun toMap(): Map<String, Any> = hashMapOf(
         "name" to name,
-        "reserved" to reserved
+        "reserved" to reserved,
+        "stock" to stock
     )
 
     companion object {

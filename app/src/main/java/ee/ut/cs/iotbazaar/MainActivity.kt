@@ -76,8 +76,6 @@ class MainActivity : AppCompatActivity() {
             Log.d("RoomExample", "Users: $users")
         }
 
-        // Seed a default user if none exists
-        viewModel.addUserIfNotExists("Jakko", 22)
     }
 
     override fun onSupportNavigateUp(): Boolean {
