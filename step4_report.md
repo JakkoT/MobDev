@@ -39,3 +39,5 @@ The application is built using the Gradle build system with Kotlin DSL.
 ## 3. Known Bugs or Limitations
 
 - **Test Coverage:** While key components like `ItemViewModel` and `LoginActivity` have associated tests, coverage does not extend to all ViewModels, Fragments, and Repositories.
+- **The add items needs work** Some logic on how the notification should work is missing, and profile should be updated
+- **Can make profile without real mail** - as we don't have 2 factor authentication for register.
