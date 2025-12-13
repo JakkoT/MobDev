@@ -54,17 +54,6 @@ class AccountFragment : Fragment() {
             }
             startActivity(intent)
         }
-
-        userViewModel.users.observe(viewLifecycleOwner) { users ->
-            val currentUser = users.firstOrNull()
-            if (currentUser != null) {
-                binding.accountGreeting.text = getString(R.string.account_greeting, currentUser.name)
-                binding.accountDetails.text = getString(R.string.account_details, currentUser.age)
-            } else {
-                binding.accountGreeting.text = getString(R.string.account_greeting_generic)
-                binding.accountDetails.text = getString(R.string.account_details_generic)
-            }
-        }
     }
 
     override fun onDestroyView() {

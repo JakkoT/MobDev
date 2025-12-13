@@ -10,13 +10,13 @@ A key UX requirement is a transparent and clean interface. The app will use a ba
 
 ## Roles
 - Jakko Turro: Project Leader/Manager, Backend Developer, Editor, Presenter
-- Kristjan Orrin: Frontend Developer, UI/UX Designer, Presenter
+- Kristjan Orrin: Frontend Developer, UI/UX Designer
 - Artur Tamm: Lead Developer, Researcher
 
 ### Contributions
-- Jakko Turro: Initial setup, Camera setup, Room functionality, UI improvements, documentation.
-- Kristjan Orrin: UI improvements, layout optimizations, additional UI features.
-- Artur Tamm: Camera functionality implementation and integration, UI improvements.
+- Jakko Turro: Initial setup, Camera setup, Room functionality, UI improvements, documentation, Firebase and API implementation.
+- Kristjan Orrin: Layout optimizations, additional UI features, user dashboard, notifications, item quide, item availability, inventory management, location implementation.
+- Artur Tamm: Camera functionality implementation and integration, UI improvements, user authentication, inventory management.
 
 # Planned Features
 - QR Code Scanning: Use the device camera to scan QR codes on components for quick check

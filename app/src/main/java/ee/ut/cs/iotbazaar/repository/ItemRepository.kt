@@ -59,12 +59,12 @@ class ItemRepository(
     /**
      * Insert a new item to Firestore
      */
-    suspend fun insert(name: String, reserved: Boolean = false): Result<String> {
+    suspend fun insert(name: String, stock: Int = 1): Result<String> {
         // Return Result with new document ID or error
         return try {
             val data = hashMapOf(
                 "name" to name,
-                "reserved" to reserved,
+                "stock" to stock,
                 "createdAt" to com.google.firebase.Timestamp.now()
             )
             // Add document to Firestore
@@ -110,7 +110,6 @@ class ItemRepository(
                 // Prepare updated data
                 val data = hashMapOf(
                     "name" to item.name,
-                    "reserved" to item.reserved,
                     "updatedAt" to com.google.firebase.Timestamp.now()
                 )
                 // Update document by ID
@@ -202,15 +201,14 @@ class ItemRepository(
                 val itemSnap = transaction.get(itemRef)
                 if (!itemSnap.exists()) throw Exception("Item does not exist")
 
-                val stock = itemSnap.getLong("stock")?.toInt() ?: 0
+                // Default to 3 if stock field is missing (legacy items)
+                val stock = itemSnap.getLong("stock")?.toInt() ?: 3
                 if (stock <= 0) throw Exception("Item out of stock")
 
                 val newStock = stock - 1
-                val shouldReserve = newStock == 0
 
                 transaction.update(itemRef, mapOf(
                     "stock" to newStock,
-                    "reserved" to shouldReserve,
                     "updatedAt" to com.google.firebase.Timestamp.now()
                 ))
 
@@ -242,5 +240,147 @@ class ItemRepository(
         }
     }
 
+    /**
+     * Return item: increases stock by 1 and removes from user's takenItems.
+     */
+    suspend fun returnItem(userId: String, itemId: String): Result<Unit> {
+        return try {
+            val db = FirebaseFirestore.getInstance()
+            val userRef = db.collection("users_real").document(userId)
+            val itemRef = db.collection("items").document(itemId)
 
+            db.runTransaction { transaction ->
+                val userSnap = transaction.get(userRef)
+                val itemSnap = transaction.get(itemRef)
+
+                if (!itemSnap.exists()) throw Exception("Item does not exist")
+
+                // 1. Update User's takenItems
+                val takenItems = userSnap.get("takenItems") as? List<Map<String, Any>> ?: emptyList()
+                val itemEntry = takenItems.find { it["itemId"] == itemId }
+                    ?: throw Exception("User does not have this item borrowed")
+
+                val currentUserStock = (itemEntry["stock"] as? Long)?.toInt() ?: 1
+                val updatedTakenItems = if (currentUserStock > 1) {
+                    // Decrement stock for this item in user list
+                    takenItems.map {
+                        if (it["itemId"] == itemId) {
+                            it.toMutableMap().apply {
+                                this["stock"] = currentUserStock - 1
+                            }
+                        } else it
+                    }
+                } else {
+                    // Remove item from list
+                    takenItems.filter { it["itemId"] != itemId }
+                }
+                transaction.update(userRef, "takenItems", updatedTakenItems)
+
+                // 2. Update Item stock
+                // Default to 3 if stock field is missing (legacy items)
+                val currentItemStock = itemSnap.getLong("stock")?.toInt() ?: 3
+                val newItemStock = currentItemStock + 1
+
+                transaction.update(itemRef, mapOf(
+                    "stock" to newItemStock,
+                    "updatedAt" to com.google.firebase.Timestamp.now()
+                ))
+
+            }.await()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Get map of item IDs to return dates borrowed by the user.
+     */
+    fun getUserBorrowedItemsInfo(userId: String): Flow<Map<String, Long>> = callbackFlow {
+        val userRef = firestore.collection("users_real").document(userId)
+        val listener = userRef.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                Log.e(TAG, "Error listening to user borrowed items: ${error.message}")
+                return@addSnapshotListener
+            }
+
+            val info = if (snapshot != null && snapshot.exists()) {
+                val takenItems = snapshot.get("takenItems") as? List<Map<String, Any>> ?: emptyList()
+                takenItems.mapNotNull {
+                    val id = it["itemId"] as? String
+                    val date = it["returnDate"] as? Long
+                    if (id != null) id to (date ?: 0L) else null
+                }.toMap()
+            } else {
+                emptyMap()
+            }
+            trySend(info)
+        }
+        awaitClose { listener.remove() }
+    }
+
+    /**
+     * Get map of item IDs to return dates borrowed by the user (One-shot fetch).
+     */
+    suspend fun getUserBorrowedItemsInfoOneShot(userId: String): Map<String, Long> {
+        return try {
+            val snapshot = firestore.collection("users_real").document(userId).get().await()
+            if (snapshot.exists()) {
+                val takenItems = snapshot.get("takenItems") as? List<Map<String, Any>> ?: emptyList()
+                takenItems.mapNotNull {
+                    val id = it["itemId"] as? String
+                    val date = it["returnDate"] as? Long
+                    if (id != null) id to (date ?: 0L) else null
+                }.toMap()
+            } else {
+                emptyMap()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error fetching borrowed items one-shot: ${e.message}")
+            emptyMap()
+        }
+    }
+
+    /**
+     * Add a scan history entry for the user.
+     */
+    suspend fun addScanHistory(userId: String, historyItem: ee.ut.cs.iotbazaar.model.ScanHistoryItem): Result<Unit> {
+        return try {
+            val userRef = firestore.collection("users_real").document(userId)
+            // Add to a subcollection "scan_history"
+            userRef.collection("scan_history")
+                .add(historyItem)
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error adding scan history: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Get scan history for the user.
+     */
+    fun getUserScanHistory(userId: String): Flow<List<ee.ut.cs.iotbazaar.model.ScanHistoryItem>> = callbackFlow {
+        val userRef = firestore.collection("users_real").document(userId)
+        val listener = userRef.collection("scan_history")
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Log.e(TAG, "Error listening to scan history: ${error.message}")
+                    return@addSnapshotListener
+                }
+
+                val history = snapshot?.documents?.mapNotNull { doc ->
+                    try {
+                        doc.toObject(ee.ut.cs.iotbazaar.model.ScanHistoryItem::class.java)
+                    } catch (e: Exception) {
+                        null
+                    }
+                } ?: emptyList()
+                trySend(history)
+            }
+        awaitClose { listener.remove() }
+    }
 }

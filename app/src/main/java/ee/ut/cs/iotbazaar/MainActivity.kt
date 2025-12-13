@@ -12,12 +12,16 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import ee.ut.cs.iotbazaar.databinding.ActivityMainBinding
 import ee.ut.cs.iotbazaar.ui.user.UserViewModel
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.appcompat.app.AlertDialog
 import ee.ut.cs.iotbazaar.theme.ThemePreferences
-
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
+import ee.ut.cs.iotbazaar.worker.ReturnNotificationWorker
+import androidx.work.ExistingPeriodicWorkPolicy
+import android.Manifest
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,8 +40,15 @@ class MainActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = binding.navView
 
-        // Request camera permission at runtime
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), 101)
+        // Request permissions at runtime
+        val permissions = mutableListOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+        ActivityCompat.requestPermissions(this, permissions.toTypedArray(), 101)
+
+        // Schedule background worker for return notifications
+        scheduleReturnNotifications()
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.navigation_home))
@@ -78,6 +89,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun scheduleReturnNotifications() {
+        val workRequest = PeriodicWorkRequestBuilder<ReturnNotificationWorker>(
+            24, TimeUnit.HOURS
+        ).build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "ReturnNotificationWork",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp() || super.onSupportNavigateUp()
@@ -100,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isInternetAvailable(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)

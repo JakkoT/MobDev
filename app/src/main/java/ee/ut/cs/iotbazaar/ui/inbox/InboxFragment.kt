@@ -11,6 +11,12 @@ import ee.ut.cs.iotbazaar.databinding.FragmentInboxBinding
 import ee.ut.cs.iotbazaar.ui.home.ProfilePopupFragment
 import ee.ut.cs.iotbazaar.ui.user.UserViewModel
 import androidx.navigation.fragment.findNavController
+import android.widget.Toast
+import ee.ut.cs.iotbazaar.api.RetrofitClient
+import ee.ut.cs.iotbazaar.model.Quote
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class InboxFragment : Fragment() {
 
@@ -47,9 +53,40 @@ class InboxFragment : Fragment() {
         }
 
         viewModel.users.observe(viewLifecycleOwner) { users ->
-            val distinct = users.distinctBy { it.name }
+            val distinct = users
+                .filter { !it.name.equals("Anonymous", ignoreCase = true) }
+                .distinctBy { it.name }
             inboxAdapter.submitList(distinct)
         }
+
+        fetchRandomQuote()
+    }
+
+    private fun fetchRandomQuote() {
+        // Show loading state
+        binding.MOTD.text = "Loading quote..."
+
+        // Make API call
+        RetrofitClient.quoteApiService.getRandomQuote().enqueue(object : Callback<Quote> {
+            // Handle successful response
+            override fun onResponse(call: Call<Quote>, response: Response<Quote>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val quote = response.body()!!
+                    binding.MOTD.text = "\"${quote.quote}\"\n- ${quote.author}"
+                } else {
+                    binding.MOTD.text = "Failed to load quote. Please try again later."
+                }
+            }
+            // Handle failure
+            override fun onFailure(call: Call<Quote>, t: Throwable) {
+                binding.MOTD.text = "No internet connection. Please check your network."
+                Toast.makeText(
+                    requireContext(),
+                    "Error: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     override fun onDestroyView() {

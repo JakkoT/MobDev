@@ -76,9 +76,9 @@
                 app:boxCornerRadiusBottomStart="18dp"
                 app:boxCornerRadiusBottomEnd="18dp"
                 app:hintTextColor="@color/text_secondary"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/reservedSwitch"
+                app:layout_constraintEnd_toStartOf="@+id/itemQuantityLayout"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">
 
@@ -91,23 +91,35 @@
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/reservedSwitch"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemQuantityLayout"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="Reserved"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:background="@drawable/bg_reserved_toggle"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                app:boxBackgroundColor="@color/surface_elevated"
+                app:boxStrokeColor="@color/surface_subtle"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:boxCornerRadiusTopStart="18dp"
+                app:boxCornerRadiusTopEnd="18dp"
+                app:boxCornerRadiusBottomStart="18dp"
+                app:boxCornerRadiusBottomEnd="18dp"
+                app:hintTextColor="@color/text_secondary"
+                android:layout_marginEnd="12dp"
+                app:layout_constraintStart_toEndOf="@+id/itemNameLayout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/itemNameLayout"
-                app:layout_constraintBottom_toBottomOf="@id/itemNameLayout"
-                app:useMaterialThemeColors="false" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemQuantityInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Qty"
+                    android:inputType="number"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

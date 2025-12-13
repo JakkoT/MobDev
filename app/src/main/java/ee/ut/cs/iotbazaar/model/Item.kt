@@ -5,16 +5,15 @@ package ee.ut.cs.iotbazaar.model
 data class Item(
     val id: String = "", // Firebase document ID
     val name: String = "",
-    val reserved: Boolean = false,
-    val stock: Int = 0
+    val stock: Int = 0,
+    val returnDate: Long? = null // Only used for UI display of borrowed items
 ) {
     // No-arg constructor for Firebase
-    constructor() : this("", "", false)
+    constructor() : this("", "", 0, null)
 
     // Convert to Map for Firestore
     fun toMap(): Map<String, Any> = hashMapOf(
         "name" to name,
-        "reserved" to reserved,
         "stock" to stock
     )
 
@@ -24,8 +23,9 @@ data class Item(
             return Item(
                 id = id,
                 name = map["name"] as? String ?: "",
-                reserved = map["reserved"] as? Boolean ?: false,
-                stock = map["stock"] as? Int ?: 1
+                // Safely cast Number (Long/Int) to Int, default to 3 for legacy items
+                stock = (map["stock"] as? Number)?.toInt() ?: 3,
+                returnDate = null
             )
         }
     }

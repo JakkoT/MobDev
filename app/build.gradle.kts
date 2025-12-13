@@ -97,4 +97,6 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.12") // For mocking
     androidTestImplementation("io.mockk:mockk-android:1.13.12")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") // For coroutine testing
+
+    implementation(libs.androidx.work.runtime.ktx)
 }

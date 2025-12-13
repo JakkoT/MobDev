@@ -9,6 +9,10 @@ import ee.ut.cs.iotbazaar.databinding.FragmentSettingsBinding
 import ee.ut.cs.iotbazaar.ui.home.ProfilePopupFragment
 import androidx.navigation.fragment.findNavController
 import ee.ut.cs.iotbazaar.theme.ThemePreferences
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import ee.ut.cs.iotbazaar.worker.ReturnNotificationWorker
 
 class SettingsFragment : Fragment() {
 
@@ -43,6 +47,21 @@ class SettingsFragment : Fragment() {
         binding.darkModeSwitch.setOnCheckedChangeListener { _, checked ->
             // persist + apply; AppCompat will recreate the activity automatically
             ThemePreferences.setDarkEnabled(requireContext(), checked)
+        }
+
+        // Test notification button
+        binding.testNotificationButton.setOnClickListener {
+            val workRequest = OneTimeWorkRequestBuilder<ReturnNotificationWorker>()
+                .setInputData(workDataOf("is_test" to true))
+                .build()
+            WorkManager.getInstance(requireContext()).enqueue(workRequest)
+        }
+
+        // Check due items notification button
+        binding.checkDueItemsButton.setOnClickListener {
+            val workRequest = OneTimeWorkRequestBuilder<ReturnNotificationWorker>()
+                .build()
+            WorkManager.getInstance(requireContext()).enqueue(workRequest)
         }
     }
 

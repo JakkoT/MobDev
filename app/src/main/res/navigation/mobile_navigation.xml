@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_home_to_catalog"
             app:destination="@id/navigation_catalog" />
+        <action
+            android:id="@+id/action_navigation_home_to_qrCodeScannerFragment"
+            app:destination="@id/qrCodeScanner" />
     </fragment>
 
     <fragment
@@ -67,6 +70,10 @@
         android:id="@+id/qrCodeScanner"
         android:name="ee.ut.cs.iotbazaar.ui.camera.QrCodeScannerFragment"
         android:label="QR Skanner">
+        <argument
+            android:name="isReturn"
+            app:argType="boolean"
+            android:defaultValue="false" />
         <action
             android:id="@+id/action_qrCodeScanner_to_qrCodeResult"
             app:destination="@id/qrCodeResult" />

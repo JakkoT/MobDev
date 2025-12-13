@@ -56,14 +56,14 @@ class ItemViewModelTest {
     fun `addItem should call repository's insert method`() = runTest {
         // 1. Arrange
         val itemName = "Unit Test Item"
-        val isReserved = false
+        val stock = 3
 
         // 2. Act
-        viewModel.addItem(itemName, isReserved)
+        viewModel.addItem(itemName, stock)
 
         // 3. Assert
         coVerify(exactly = 1) {
-            anyConstructed<ItemRepository>().insert(name = itemName, reserved = isReserved)
+            anyConstructed<ItemRepository>().insert(name = itemName, stock = stock)
         }
     }
 }

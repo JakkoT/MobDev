@@ -1,17 +1,22 @@
 package ee.ut.cs.iotbazaar.ui.item
 
+import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ee.ut.cs.iotbazaar.R
 import ee.ut.cs.iotbazaar.databinding.RowReservedItemBinding
 import ee.ut.cs.iotbazaar.model.Item
 
 class ItemAdapter(
+    private val showStatus: Boolean = true,
     private val onLongPressDelete: ((Item) -> Unit)? = null
 ) : RecyclerView.Adapter<ItemAdapter.ItemVH>() {
 
@@ -29,31 +34,74 @@ class ItemAdapter(
             val context = binding.root.context
             binding.itemName.text = item.name
 
-            val statusStyle = if (item.reserved) {
-                StatusStyle(
-                    chipColor = ContextCompat.getColor(context, R.color.item_reserved_chip),
-                    textColor = ContextCompat.getColor(context, R.color.item_reserved_text),
-                    textRes = R.string.status_reserved
+            if (showStatus) {
+                binding.itemStock.text = "${item.stock} left"
+                binding.itemStock.visibility = View.VISIBLE
+                binding.itemStatus.visibility = View.VISIBLE
+                binding.itemId.visibility = View.GONE // Hide ID in full catalog view if preferred, or show it
+
+                val statusStyle = when {
+                    item.stock <= 0 -> StatusStyle(
+                        chipColor = ContextCompat.getColor(context, R.color.item_reserved_chip),
+                        textColor = ContextCompat.getColor(context, R.color.item_reserved_text),
+                        textRes = R.string.status_out_of_stock
+                    )
+                    else -> StatusStyle(
+                        chipColor = ContextCompat.getColor(context, R.color.item_available_chip),
+                        textColor = ContextCompat.getColor(context, R.color.item_available_text),
+                        textRes = R.string.status_available
+                    )
+                }
+
+                binding.itemStatus.setText(statusStyle.textRes)
+                binding.itemStatus.setTextColor(statusStyle.textColor)
+                ViewCompat.setBackgroundTintList(
+                    binding.itemStatus,
+                    ColorStateList.valueOf(statusStyle.chipColor)
                 )
             } else {
-                StatusStyle(
-                    chipColor = ContextCompat.getColor(context, R.color.item_available_chip),
-                    textColor = ContextCompat.getColor(context, R.color.item_available_text),
-                    textRes = R.string.status_available
-                )
+                binding.itemStock.visibility = View.GONE
+                binding.itemStatus.visibility = View.GONE
+
+                // Show ID only in "Borrowed items" view (when showStatus is false)
+                binding.itemId.text = "ID: ${item.id}"
+                binding.itemId.visibility = View.VISIBLE
             }
 
-            binding.itemStatus.setText(statusStyle.textRes)
-            binding.itemStatus.setTextColor(statusStyle.textColor)
-            ViewCompat.setBackgroundTintList(
-                binding.itemStatus,
-                ColorStateList.valueOf(statusStyle.chipColor)
-            )
+            if (item.returnDate != null && item.returnDate > 0) {
+                val date = java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.getDefault()).format(java.util.Date(item.returnDate))
+                binding.itemReturnDate.text = date // Just the date
+                binding.itemReturnDate.visibility = View.VISIBLE
+                binding.itemReturnDate.setTypeface(null, android.graphics.Typeface.BOLD)
+                binding.itemReturnDate.setTextColor(ContextCompat.getColor(context, R.color.text_primary))
+            } else {
+                binding.itemReturnDate.visibility = View.GONE
+            }
 
             (binding.root as? MaterialCardView)?.setOnLongClickListener {
                 onLongPressDelete?.invoke(item)
                 true
             }
+
+            (binding.root as? MaterialCardView)?.setOnClickListener {
+                showItemDialog(context, item)
+            }
+        }
+
+        private fun showItemDialog(context: android.content.Context, item: Item) {
+            MaterialAlertDialogBuilder(context)
+                .setTitle(item.name)
+                .setMessage("Would you like to view the instructions for this item?")
+                .setPositiveButton("Show Instructions") { dialog, _ ->
+                    val url = "https://www.raspberrypi.com/documentation/computers/getting-started.html"
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    context.startActivity(intent)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
     }
 

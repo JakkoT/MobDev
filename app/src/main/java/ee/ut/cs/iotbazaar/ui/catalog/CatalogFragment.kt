@@ -75,18 +75,21 @@ class CatalogFragment : Fragment() {
         // Add button logic
         binding.addItemButton.setOnClickListener {
             val name = binding.itemNameInput.text?.toString()?.trim().orEmpty()
-            val reserved = binding.reservedSwitch.isChecked
+            val quantityStr = binding.itemQuantityInput.text?.toString()?.trim().orEmpty()
+            val quantity = quantityStr.toIntOrNull() ?: 1
+
             if (name.isEmpty()) {
                 binding.itemNameLayout.error = "Name required"
                 binding.addItemButton.isEnabled = false
             } else {
                 binding.itemNameLayout.error = null
                 pendingScrollToBottom = true
-                itemViewModel.addItem(name, reserved)
+                itemViewModel.addItem(name, quantity)
                 hideKeyboard()
+                android.widget.Toast.makeText(requireContext(), "Item $name added successfully", android.widget.Toast.LENGTH_LONG).show()
                 // Reset form
                 binding.itemNameInput.setText("")
-                binding.reservedSwitch.isChecked = false
+                binding.itemQuantityInput.setText("")
                 binding.addItemButton.isEnabled = false
             }
         }

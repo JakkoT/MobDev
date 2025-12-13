@@ -102,18 +102,21 @@
                 android:layout_marginBottom="12dp"
                 android:background="@color/surface_subtle" />
 
-            <!-- placeholder settings -->
-            <TextView
-                android:id="@+id/setting1"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/testNotificationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/placeholder_setting_a" />
-            <TextView
-                android:id="@+id/setting2"
+                android:text="Test Notification Now"
+                style="@style/Widget.IOTBazaar.Button" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/checkDueItemsButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/placeholder_setting_b"
-                android:paddingTop="4dp" />
+                android:layout_marginTop="8dp"
+                android:text="Check Due Items Now"
+                style="@style/Widget.IOTBazaar.Button" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

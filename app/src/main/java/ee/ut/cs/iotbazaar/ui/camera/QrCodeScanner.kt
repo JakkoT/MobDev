@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.gms.common.moduleinstall.ModuleInstall
 import com.google.android.gms.common.moduleinstall.ModuleInstallRequest
 import com.google.firebase.auth.FirebaseAuth
@@ -78,11 +79,24 @@ class QrCodeScannerFragment : Fragment() {
 
 
         itemViewModel.reserveResult.observe(viewLifecycleOwner) { result ->
+            val isReturn = arguments?.getBoolean("isReturn") ?: false
             result.onSuccess {
-                Toast.makeText(requireContext(), "Eseme reserveerimine õnnestus", Toast.LENGTH_SHORT).show()
+                val title = if (isReturn) "Success" else "Success"
+                val msg = if (isReturn) "Item returned successfully!" else "Item reserved successfully!"
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(title)
+                    .setMessage(msg)
+                    .setPositiveButton("OK") { dialog, _ ->
+                        dialog.dismiss()
+                        findNavController().popBackStack()
+                    }
+                    .show()
+
                 binding.btnReserve.visibility = View.GONE
             }.onFailure { e ->
-                Toast.makeText(requireContext(), "Reserveerimine ebaõnnestus: ${e.message}", Toast.LENGTH_SHORT).show()
+                val action = if (isReturn) "Return" else "Reservation"
+                Toast.makeText(requireContext(), "$action failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -122,58 +136,71 @@ class QrCodeScannerFragment : Fragment() {
     private fun startScanning() {
         //if scanner is not installed, return error
         if (!isScannerInstalled) {
-            Toast.makeText(requireContext(), "Moodul pole valmis, proovi uuesti", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Module not ready, try again", Toast.LENGTH_SHORT).show()
             return
         }
 
         scanner.startScan()
             .addOnSuccessListener { barcode -> //if the scanner works
-                val result = barcode.rawValue ?: "Tühi väärtus"
-                binding.scannedValueTv.text = "Skaneeritud väärtus:\n$result"
-                Toast.makeText(requireContext(), "Skaneeritud: $result", Toast.LENGTH_SHORT).show()
+                val result = barcode.rawValue ?: "Empty value"
+                binding.scannedValueTv.text = "Scanned value:\n$result"
+                Toast.makeText(requireContext(), "Scanned: $result", Toast.LENGTH_SHORT).show()
                 binding.btnReserve.visibility = View.GONE
                 val textName = binding.qrName
                 val textReserved = binding.qrReserved
-                textName.text = "Laeb eseme andmeid..."
+                textName.text = "Loading item data..."
                 textReserved.text = ""
                 viewLifecycleOwner.lifecycleScope.launch {
                     try {
                         val item = itemViewModel.getItem(result)
+                        val isReturn = arguments?.getBoolean("isReturn") ?: false
 
                         if (item != null) {
-                            textName.text = "Nimi: ${item.name}"
-                            textReserved.text = if (item.reserved) "Staatus: Reserveeritud" else "Staatus: Vaba"
-                            if (!item.reserved && item.stock > 0) {
+                            textName.text = "Name: ${item.name}"
+
+                            if (isReturn) {
+                                // RETURN LOGIC
+                                textReserved.text = "Returning..."
+                                binding.btnReserve.text = "Return Item"
                                 binding.btnReserve.visibility = View.VISIBLE
                                 binding.btnReserve.setOnClickListener {
-                                    val userId = FirebaseAuth.getInstance().currentUser?.uid
-                                    if (userId == null) {
-                                        Toast.makeText(requireContext(), "Kasutaja ei ole sisse logitud", Toast.LENGTH_SHORT).show()
-                                        return@setOnClickListener
-                                    }
+                                    itemViewModel.returnItem(item.id, item.name)
+                                }
+                            } else {
+                                // RESERVE LOGIC (Existing)
+                                textReserved.text = if (item.stock <= 0) "Status: Out of Stock" else "Status: Available"
+                                binding.btnReserve.text = "Reserve" // Reset text just in case
+                                if (item.stock > 0) {
+                                    binding.btnReserve.visibility = View.VISIBLE
+                                    binding.btnReserve.setOnClickListener {
+                                        val userId = FirebaseAuth.getInstance().currentUser?.uid
+                                        if (userId == null) {
+                                            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+                                            return@setOnClickListener
+                                        }
 
-                                    val returnDate = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000
-                                    itemViewModel.reserveItemForCurrentUser( item.id, returnDate)
-                                }
-                                }
-                                else {
+                                        val returnDate = System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000
+                                        itemViewModel.reserveItemForCurrentUser( item.id, returnDate, item.name)
+                                    }
+                                } else {
                                     binding.btnReserve.visibility = View.GONE
                                 }
+                            }
                         } else {
-                            textName.text = "Eseme andmeid ei leitud."
-                            textReserved.text = "Dokument ID: $result ei eksisteeri"
+                            textName.text = "Item data not found."
+                            textReserved.text = "Document ID: $result does not exist"
                         }
                     } catch (e: Exception) {
-                        textName.text = "Viga andmete laadimisel"
+                        textName.text = "Error loading data"
                         textReserved.text = "Error: ${e.message}"
                     }
                 }
             }
             .addOnCanceledListener { //was canceled before scanning
-                Toast.makeText(requireContext(), "Tühistatud", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { //failed to scan with specific error
-                Toast.makeText(requireContext(), "Viga: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
