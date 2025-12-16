@@ -32,6 +32,9 @@ class CameraFragment : Fragment() {
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
 
+    /**
+     * Inflates the layout for this fragment.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +43,10 @@ class CameraFragment : Fragment() {
         _binding = CameraBinding.inflate(inflater, container, false)
         return binding.root
     }
-
+    /**
+     * Called immediately after onCreateView.
+     * Sets up back button handling and starts the camera if permissions are granted.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,10 +71,17 @@ class CameraFragment : Fragment() {
 
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
-
+    /**
+     * Checks if the app has camera permission.
+     *
+     * @return True if camera permission is granted, false otherwise.
+     */
     private fun hasCameraPermission(): Boolean =
         ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-
+    /**
+     * Handles the result of the permission request.
+     * If granted, starts the camera; if denied, navigates back to home.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

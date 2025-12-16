@@ -127,7 +127,9 @@ class ItemAdapter(
                 .show()
         }
     }
-
+    /**
+     * Inflates the item view and creates a ViewHolder.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemVH {
         val inflater = LayoutInflater.from(parent.context)
         val binding = RowReservedItemBinding.inflate(inflater, parent, false)

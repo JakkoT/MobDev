@@ -116,10 +116,21 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Handles navigation when the up button is pressed.
+     *
+     * @return True if navigation was successful, false otherwise.
+     */
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+    /**
+     * Called when the activity is becoming visible to the user.
+     * Checks if the user is authenticated and if internet connectivity is available.
+     * If not authenticated, redirects to LoginActivity.
+     * If no internet, logs out the user and redirects to LoginActivity.
+     */
     override fun onStart() {
         super.onStart()
 

@@ -226,7 +226,7 @@ class ItemRepository(
 
                 val takenItems = userSnap.get("takenItems") as? List<Map<String, Any>> ?: emptyList()
 
-                val updatedTakenItems = if (takenItems.any { it["itemId"] == itemId }) {
+                val updatedTakenItems = if (takenItems.any { it["itemId"] == itemId }) { //If user already has this item, increment personal stock count. otherwise, add new entry
                     takenItems.map {
                         if (it["itemId"] == itemId) {
                             it.toMutableMap().apply {
