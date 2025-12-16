@@ -16,6 +16,10 @@ import android.widget.Toast
 import android.content.Intent
 import ee.ut.cs.iotbazaar.ui.Login.LoginActivity
 
+/**
+ * Fragment for the Account screen.
+ * Displays user account information and provides logout functionality.
+ */
 class AccountFragment : Fragment() {
 
     private var _binding: FragmentAccountBinding? = null
@@ -23,6 +27,9 @@ class AccountFragment : Fragment() {
 
     private val userViewModel: UserViewModel by activityViewModels()
 
+    /**
+     * Inflates the layout for this fragment.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,6 +39,10 @@ class AccountFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Called immediately after onCreateView.
+     * Sets up click listeners for profile, back navigation, and logout.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

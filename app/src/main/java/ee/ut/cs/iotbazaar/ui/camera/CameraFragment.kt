@@ -19,6 +19,11 @@ import ee.ut.cs.iotbazaar.databinding.CameraBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+/**
+ * Fragment for displaying the camera preview.
+ * Handles camera permissions and lifecycle binding for CameraX.
+ * Note: This fragment seems to be a basic camera preview, potentially for testing or a different mode than the QR scanner.
+ */
 class CameraFragment : Fragment() {
 
     private var _binding: CameraBinding? = null
@@ -78,6 +83,10 @@ class CameraFragment : Fragment() {
         }
     }
 
+    /**
+     * Initializes and starts the camera preview.
+     * Binds the camera lifecycle to the fragment's view lifecycle.
+     */
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({

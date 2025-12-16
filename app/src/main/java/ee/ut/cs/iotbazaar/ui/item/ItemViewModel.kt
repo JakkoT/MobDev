@@ -14,6 +14,10 @@ import ee.ut.cs.iotbazaar.repository.ItemRepository
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel responsible for managing Item data and business logic.
+ * Handles interactions between the UI and the ItemRepository.
+ */
 class ItemViewModel(application: Application) : AndroidViewModel(application) {
     // Initialize the repository
     private val repository = ItemRepository()
@@ -44,8 +48,15 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private val _reserveResult = MutableLiveData<Result<Unit>>()
+    /**
+     * LiveData holding the result of the last reservation attempt.
+     */
     val reserveResult: LiveData<Result<Unit>> = _reserveResult
 
+    /**
+     * Refreshes the current user ID from FirebaseAuth.
+     * Should be called when the user login state might have changed.
+     */
     fun refreshUserData() {
         val newUid = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
         if (currentUserId.value != newUid) {
@@ -53,26 +64,55 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Adds a new item with default stock.
+     * @param name The name of the item.
+     */
     fun addItem(name: String) = addItem(name, 3)
 
 
+    /**
+     * Retrieves a specific item by its ID.
+     * @param id The unique identifier of the item.
+     * @return The Item object if found, null otherwise.
+     */
     suspend fun getItem(id: String): Item? {
         return repository.getItemById(id)
     }
 
+    /**
+     * Adds a new item to the repository.
+     * @param name The name of the item.
+     * @param stock The initial stock quantity (default is 3).
+     */
     fun addItem(name: String, stock: Int = 3) = viewModelScope.launch {
         repository.insert(name, stock)
     }
 
-    // Function to delete an item
+    /**
+     * Deletes an item from the repository.
+     * @param item The item to delete.
+     */
     fun deleteItem(item: Item) = viewModelScope.launch {
         repository.delete(item)
     }
 
-    // Function to update an item (for example toggle reserved status)
+    /**
+     * Updates an existing item in the repository.
+     * @param item The item with updated values.
+     */
     fun updateItem(item: Item) = viewModelScope.launch {
         repository.update(item)
     }
+
+    /**
+     * Reserves an item for the currently logged-in user.
+     * Also records the action in the user's scan history.
+     *
+     * @param itemId The ID of the item to reserve.
+     * @param returnDate The timestamp when the item is expected to be returned.
+     * @param itemName The name of the item (for history logging).
+     */
     fun reserveItemForCurrentUser(itemId: String, returnDate: Long, itemName: String) = viewModelScope.launch {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId == null) {
@@ -92,9 +132,21 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
         _reserveResult.postValue(result)
     }
 
-    // Deprecated: kept for compatibility if needed, but prefer the one with itemName
+    /**
+     * Reserves an item for the currently logged-in user.
+     * Deprecated: kept for compatibility if needed, but prefer the one with itemName.
+     *
+     * @param itemId The ID of the item to reserve.
+     * @param returnDate The timestamp when the item is expected to be returned.
+     */
     fun reserveItemForCurrentUser(itemId: String, returnDate: Long) = reserveItemForCurrentUser(itemId, returnDate, "Unknown Item")
 
+    /**
+     * Returns a borrowed item for the currently logged-in user.
+     *
+     * @param itemId The ID of the item to return.
+     * @param itemName The name of the item (for history logging).
+     */
     fun returnItem(itemId: String, itemName: String) = viewModelScope.launch {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId == null) {

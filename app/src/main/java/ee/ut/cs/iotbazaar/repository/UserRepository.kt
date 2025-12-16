@@ -21,7 +21,9 @@ class UserRepository(
     private val COLLECTION_NAME = "users_real"
 
     /**
-     * Get all users as a Flow with real-time updates
+     * Get all users as a Flow with real-time updates.
+     *
+     * @return A Flow emitting a list of [User] objects whenever the Firestore collection changes.
      */
     fun getAllUsers(): Flow<List<User>> = callbackFlow {
         val listener = firestore.collection(COLLECTION_NAME)
@@ -49,7 +51,10 @@ class UserRepository(
     }
 
     /**
-     * Insert a new user to Firestore
+     * Insert a new user to Firestore.
+     *
+     * @param user The [User] object to insert.
+     * @return A [Result] containing the new document ID on success, or an exception on failure.
      */
     suspend fun insert(user: User): Result<String> {
         return try {
@@ -65,7 +70,10 @@ class UserRepository(
     }
 
     /**
-     * Delete a user from Firestore
+     * Delete a user from Firestore.
+     *
+     * @param user The [User] object to delete. Must have a valid ID.
+     * @return A [Result] indicating success or failure.
      */
     suspend fun delete(user: User): Result<Unit> {
         return try {
@@ -86,7 +94,10 @@ class UserRepository(
     }
 
     /**
-     * Check if a user exists by name
+     * Check if a user exists by name.
+     *
+     * @param name The name of the user to check.
+     * @return True if a user with the given name exists, false otherwise.
      */
     suspend fun existsByName(name: String): Boolean {
         return try {

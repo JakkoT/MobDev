@@ -23,7 +23,9 @@ class ItemRepository(
     private val COLLECTION_NAME = "items"
 
     /**
-     * Get all items as a Flow with real-time updates
+     * Get all items as a Flow with real-time updates.
+     *
+     * @return A Flow emitting a list of [Item] objects whenever the Firestore collection changes.
      */
     fun getAllItems(): Flow<List<Item>> = callbackFlow {
         // Listen to Firestore collection changes
@@ -57,7 +59,11 @@ class ItemRepository(
     }
 
     /**
-     * Insert a new item to Firestore
+     * Insert a new item to Firestore.
+     *
+     * @param name The name of the item.
+     * @param stock The initial stock quantity (default is 1).
+     * @return A [Result] containing the new document ID on success, or an exception on failure.
      */
     suspend fun insert(name: String, stock: Int = 1): Result<String> {
         // Return Result with new document ID or error
@@ -79,7 +85,10 @@ class ItemRepository(
     }
 
     /**
-     * Delete an item from Firestore
+     * Delete an item from Firestore.
+     *
+     * @param item The [Item] object to delete. Must have a valid ID.
+     * @return A [Result] indicating success or failure.
      */
     suspend fun delete(item: Item): Result<Unit> {
         return try {
@@ -102,7 +111,10 @@ class ItemRepository(
     }
 
     /**
-     * Update an item in Firestore
+     * Update an item in Firestore.
+     *
+     * @param item The [Item] object with updated data. Must have a valid ID.
+     * @return A [Result] indicating success or failure.
      */
     suspend fun update(item: Item): Result<Unit> {
         return try {

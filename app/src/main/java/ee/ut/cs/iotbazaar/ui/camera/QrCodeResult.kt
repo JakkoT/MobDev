@@ -9,8 +9,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import ee.ut.cs.iotbazaar.R
-//right now not used, but in future used to display qr code action!
+
+/**
+ * Fragment to display the result of a QR code scan.
+ * Currently not actively used in the main flow, but reserved for future enhancements.
+ */
 class QrCodeResultFragment : Fragment() {
+    /**
+     * Inflates the layout and displays the scanned value passed via arguments.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

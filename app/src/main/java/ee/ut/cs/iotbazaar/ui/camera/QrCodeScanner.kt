@@ -28,6 +28,10 @@ import ee.ut.cs.iotbazaar.databinding.FragmentQrCodeScannerBinding
 import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment responsible for scanning QR codes using Google Play Services (GMS) Code Scanner.
+ * Handles the scanning process, result parsing, and item reservation/return logic.
+ */
 class QrCodeScannerFragment : Fragment() {
 
     private var _binding: FragmentQrCodeScannerBinding? = null
@@ -39,6 +43,10 @@ class QrCodeScannerFragment : Fragment() {
     private lateinit var itemViewModel: ItemViewModel
 
 
+    /**
+     * Inflates the layout and initializes the ViewModel.
+     * Applies system bar insets for proper padding.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,6 +67,10 @@ class QrCodeScannerFragment : Fragment() {
         return root
     }
 
+    /**
+     * Called immediately after onCreateView.
+     * Sets up UI listeners, initializes the scanner, and handles the scanning logic.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

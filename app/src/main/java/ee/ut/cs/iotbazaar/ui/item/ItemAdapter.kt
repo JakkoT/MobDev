@@ -15,6 +15,15 @@ import ee.ut.cs.iotbazaar.R
 import ee.ut.cs.iotbazaar.databinding.RowReservedItemBinding
 import ee.ut.cs.iotbazaar.model.Item
 
+/**
+ * RecyclerView Adapter for displaying items in a list.
+ * Supports two modes:
+ * 1. Catalog mode (showStatus = true): Displays stock status and availability.
+ * 2. Borrowed items mode (showStatus = false): Displays item ID and return date.
+ *
+ * @param showStatus Boolean flag to toggle between catalog view and borrowed items view.
+ * @param onLongPressDelete Optional callback for handling long-press events (e.g., for deletion).
+ */
 class ItemAdapter(
     private val showStatus: Boolean = true,
     private val onLongPressDelete: ((Item) -> Unit)? = null
@@ -22,14 +31,25 @@ class ItemAdapter(
 
     private val data = mutableListOf<Item>()
 
+    /**
+     * Updates the list of items and notifies the adapter.
+     * @param list The new list of items to display.
+     */
     fun submit(list: List<Item>) {
         data.clear()
         data.addAll(list)
         notifyDataSetChanged()
     }
 
+    /**
+     * ViewHolder class for binding item data to the view.
+     */
     inner class ItemVH(private val binding: RowReservedItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        /**
+         * Binds an Item object to the view elements.
+         * Configures visibility and text based on the adapter's mode (showStatus).
+         */
         fun bind(item: Item) {
             val context = binding.root.context
             binding.itemName.text = item.name
@@ -88,6 +108,9 @@ class ItemAdapter(
             }
         }
 
+        /**
+         * Shows a dialog with item details and a link to instructions.
+         */
         private fun showItemDialog(context: android.content.Context, item: Item) {
             MaterialAlertDialogBuilder(context)
                 .setTitle(item.name)

@@ -14,11 +14,18 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import ee.ut.cs.iotbazaar.worker.ReturnNotificationWorker
 
+/**
+ * Fragment for the Settings screen.
+ * Allows users to toggle dark mode and trigger test notifications.
+ */
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
+    /**
+     * Inflates the layout for this fragment.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,6 +35,10 @@ class SettingsFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Called immediately after onCreateView.
+     * Sets up UI listeners for theme toggling and notification testing.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

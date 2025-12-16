@@ -13,6 +13,10 @@ import ee.ut.cs.iotbazaar.repository.ItemRepository
 import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
 
+/**
+ * Background worker responsible for checking item return deadlines and sending notifications.
+ * Runs periodically or can be triggered manually for testing.
+ */
 class ReturnNotificationWorker(
     context: Context,
     params: WorkerParameters
@@ -20,6 +24,12 @@ class ReturnNotificationWorker(
 
     private val repository = ItemRepository()
 
+    /**
+     * Executes the background work.
+     * Checks borrowed items for the current user and sends notifications if they are due soon.
+     *
+     * @return The result of the work (Success, Failure, or Retry).
+     */
     override suspend fun doWork(): Result {
         // Allow triggering a test notification manually
         if (inputData.getBoolean("is_test", false)) {
@@ -55,6 +65,12 @@ class ReturnNotificationWorker(
         }
     }
 
+    /**
+     * Sends a local notification to the user.
+     *
+     * @param notificationId Unique ID for the notification.
+     * @param message The content text of the notification.
+     */
     private fun sendNotification(notificationId: Int, message: String) {
         val context = applicationContext
         val channelId = "return_reminders"
@@ -84,6 +100,9 @@ class ReturnNotificationWorker(
         }
     }
 
+    /**
+     * Creates the notification channel required for Android O and above.
+     */
     private fun createNotificationChannel(context: Context, channelId: String) {
         val name = "Return Reminders"
         val descriptionText = "Notifications for item return deadlines"

@@ -16,7 +16,10 @@ import ee.ut.cs.iotbazaar.ui.item.ItemAdapter
 import ee.ut.cs.iotbazaar.ui.item.ItemViewModel
 import androidx.navigation.fragment.findNavController
 
-// Fragment showing the full catalogue of items + add form
+/**
+ * Fragment responsible for displaying the catalog of items.
+ * Allows users to view items and add new items to the inventory.
+ */
 class CatalogFragment : Fragment() {
 
     private var _binding: FragmentCatalogBinding? = null
@@ -28,6 +31,9 @@ class CatalogFragment : Fragment() {
     // Flag to know if we should scroll after next list emission
     private var pendingScrollToBottom = false
 
+    /**
+     * Inflates the layout for this fragment.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,6 +43,10 @@ class CatalogFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Called immediately after onCreateView.
+     * Sets up the RecyclerView, observes ViewModel data, and handles UI interactions.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         itemViewModel = ViewModelProvider(this).get(ItemViewModel::class.java)
@@ -95,6 +105,12 @@ class CatalogFragment : Fragment() {
         }
     }
 
+    /**
+     * Validates the item name input field.
+     * Enables or disables the add button based on input validity.
+     *
+     * @param raw The raw text input from the user.
+     */
     private fun validateForm(raw: String?) {
         val name = raw?.trim().orEmpty()
         if (name.isEmpty()) {
@@ -106,6 +122,9 @@ class CatalogFragment : Fragment() {
         }
     }
 
+    /**
+     * Hides the soft keyboard.
+     */
     private fun hideKeyboard() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.itemNameInput.windowToken, 0)

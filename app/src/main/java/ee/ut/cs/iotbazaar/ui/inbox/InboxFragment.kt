@@ -18,6 +18,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * Fragment for the Inbox screen.
+ * Displays a list of users (simulating an inbox) and fetches a random quote from an API.
+ */
 class InboxFragment : Fragment() {
 
     private var _binding: FragmentInboxBinding? = null
@@ -26,6 +30,9 @@ class InboxFragment : Fragment() {
     private val viewModel: UserViewModel by activityViewModels()
     private lateinit var inboxAdapter: InboxAdapter
 
+    /**
+     * Inflates the layout for this fragment.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +42,10 @@ class InboxFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Called immediately after onCreateView.
+     * Sets up the RecyclerView, observes user data, and fetches a random quote.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,6 +73,10 @@ class InboxFragment : Fragment() {
         fetchRandomQuote()
     }
 
+    /**
+     * Fetches a random quote from the external API using Retrofit.
+     * Updates the UI with the quote or an error message.
+     */
     private fun fetchRandomQuote() {
         // Show loading state
         binding.MOTD.text = "Loading quote..."

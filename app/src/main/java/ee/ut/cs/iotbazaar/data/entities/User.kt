@@ -1,9 +1,14 @@
 package ee.ut.cs.iotbazaar.data.entities
 
-// Data class representing a User
-// Used for Firebase Firestore storage
-
-// Data class representing a User for Firebase Firestore
+/**
+ * Data class representing a User for Firebase Firestore.
+ *
+ * @property id The unique user ID (UID).
+ * @property name The display name of the user.
+ * @property age The age of the user.
+ * @property takenItems A list of maps representing items borrowed by the user.
+ * @property createdAt Timestamp of user creation.
+ */
 data class User(
     val id: String = "",
     val name: String = "",
@@ -14,7 +19,9 @@ data class User(
     // No-arg constructor for Firebase
     constructor() : this("", "", 0, emptyList(), System.currentTimeMillis())
 
-    // Convert to Map for Firestore
+    /**
+     * Converts the User object to a Map for Firestore storage.
+     */
     fun toMap(): Map<String, Any> = hashMapOf(
         "uid" to id,
         "name" to name,
@@ -24,7 +31,12 @@ data class User(
     )
 
     companion object {
-        // Create User from Firestore document
+        /**
+         * Creates a User object from a Firestore document map.
+         *
+         * @param id The document ID.
+         * @param map The data map from the document.
+         */
         fun fromMap(id: String, map: Map<String, Any>): User {
             return User(
                 id = id,

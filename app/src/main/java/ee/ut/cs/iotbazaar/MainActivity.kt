@@ -23,11 +23,22 @@ import ee.ut.cs.iotbazaar.worker.ReturnNotificationWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import android.Manifest
 
+/**
+ * Main entry point for the application.
+ * Handles navigation setup, permission requests, and background worker scheduling.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: UserViewModel
 
+    /**
+     * Called when the activity is starting.
+     * Initializes the UI, sets up navigation, requests permissions, and observes user data.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     * this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         // Apply user-selected theme before view inflation
         ThemePreferences.applySavedMode(this)
@@ -89,6 +100,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Schedules a periodic background worker to check for items that need to be returned.
+     * The worker runs approximately every 24 hours.
+     */
     private fun scheduleReturnNotifications() {
         val workRequest = PeriodicWorkRequestBuilder<ReturnNotificationWorker>(
             24, TimeUnit.HOURS

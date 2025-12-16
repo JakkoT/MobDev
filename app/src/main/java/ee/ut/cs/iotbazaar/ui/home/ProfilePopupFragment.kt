@@ -15,7 +15,14 @@ import com.google.firebase.auth.FirebaseAuth
 import ee.ut.cs.iotbazaar.R
 import ee.ut.cs.iotbazaar.ui.Login.LoginActivity
 
+/**
+ * BottomSheetDialogFragment that displays a profile menu.
+ * Provides navigation to Account, Inbox, Settings, and Logout functionality.
+ */
 class ProfilePopupFragment : BottomSheetDialogFragment() {
+    /**
+     * Inflates the layout and sets up click listeners for menu items.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -50,6 +57,9 @@ class ProfilePopupFragment : BottomSheetDialogFragment() {
         return view
     }
 
+    /**
+     * Expands the bottom sheet fully when shown.
+     */
     override fun onStart() {
         super.onStart()
         (dialog as? BottomSheetDialog)?.behavior?.apply {

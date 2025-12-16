@@ -24,11 +24,19 @@ import androidx.appcompat.app.AlertDialog
 import ee.ut.cs.iotbazaar.theme.ThemePreferences
 
 
+/**
+ * Activity responsible for user authentication (Login).
+ * Supports Email/Password login and Google Sign-In.
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    /**
+     * Called when the activity is starting.
+     * Initializes UI components, sets up click listeners for login actions, and configures Google Sign-In.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         // Apply user-selected theme before view inflation
         ThemePreferences.applySavedMode(this)
@@ -99,50 +107,60 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    // 🔹 Activity result launcher Google sisselogimiseks
-    private val googleSignInLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        try {
-            val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
-            firebaseAuthWithGoogle(account.idToken!!)
-        } catch (e: ApiException) {
-            Toast.makeText(this, "Google login failed", Toast.LENGTH_SHORT).show()
+    /**
+     * Launcher for the Google Sign-In activity result.
+     * Handles the result of the sign-in intent.
+     */
+    private val googleSignInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                firebaseAuthWithGoogle(account)
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    // 🔹 Firebase autentimine Google tokeniga
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
+    /**
+     * Authenticates with Firebase using the Google account credentials.
+     *
+     * @param acct The GoogleSignInAccount object containing the user's ID token.
+     */
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
                     saveUserToFirestore()
                     val intent = Intent(this, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this, "Firebase login failed", Toast.LENGTH_SHORT).show()
+                    // If sign in fails, display a message to the user.
+                    Toast.makeText(this, "Authentication Failed.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (auth.currentUser != null) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-    }
+    /**
+     * Checks if the device has an active internet connection.
+     *
+     * @return True if internet is available, false otherwise.
+     */
     private fun isInternetAvailable(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
+
+    /**
+     * Displays a dialog informing the user that there is no internet connection.
+     */
     private fun showNoInternetDialog() {
         AlertDialog.Builder(this)
             .setTitle("No Internet Connection")
@@ -151,5 +169,4 @@ class LoginActivity : AppCompatActivity() {
             .setCancelable(false)
             .show()
     }
-
 }

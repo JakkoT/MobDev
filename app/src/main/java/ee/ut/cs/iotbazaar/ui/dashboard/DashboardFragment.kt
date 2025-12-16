@@ -9,6 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ee.ut.cs.iotbazaar.databinding.FragmentDashboardBinding
 
+/**
+ * Fragment for the Dashboard screen.
+ * Currently displays a placeholder message.
+ */
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
@@ -17,6 +21,9 @@ class DashboardFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    /**
+     * Inflates the layout and observes the ViewModel.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

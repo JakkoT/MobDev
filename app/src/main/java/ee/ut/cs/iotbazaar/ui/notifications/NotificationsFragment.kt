@@ -9,6 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ee.ut.cs.iotbazaar.databinding.FragmentNotificationsBinding
 
+/**
+ * Fragment for the Notifications screen.
+ * Currently displays a placeholder message.
+ */
 class NotificationsFragment : Fragment() {
 
     private var _binding: FragmentNotificationsBinding? = null
@@ -17,6 +21,9 @@ class NotificationsFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    /**
+     * Inflates the layout and observes the ViewModel.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

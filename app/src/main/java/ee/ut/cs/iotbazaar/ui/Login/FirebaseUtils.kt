@@ -4,6 +4,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
+/**
+ * Saves the currently authenticated user's basic information to Firestore.
+ * If the user document does not exist, it creates one with default values.
+ * If it exists, it merges the provided data (though currently only runs if !exists).
+ */
 fun saveUserToFirestore() {
     val auth = FirebaseAuth.getInstance()
     val user = auth.currentUser ?: return

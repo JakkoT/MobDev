@@ -28,6 +28,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * Fragment for the Home screen.
+ * Displays the user's borrowed items, scan history, and provides access to QR code scanning.
+ * Enforces location checks (Delta building) before allowing scanning.
+ */
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -44,6 +49,9 @@ class HomeFragment : Fragment() {
     }
     private val scanHistoryAdapter = ScanHistoryAdapter()
 
+    /**
+     * Inflates the layout and initializes ViewModels and Adapters.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -119,6 +127,9 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    /**
+     * Checks if the app has fine location permission.
+     */
     private fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
@@ -126,6 +137,12 @@ class HomeFragment : Fragment() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * Verifies if the user is within the allowed radius of the Delta building.
+     * If successful, navigates to the QR Code Scanner.
+     *
+     * @param isReturn Boolean flag indicating if the scan is for returning an item (true) or borrowing (false).
+     */
     @SuppressLint("MissingPermission")
     private fun verifyDeltaLocationAndNavigate(isReturn: Boolean = false) {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -165,6 +182,11 @@ class HomeFragment : Fragment() {
             }
     }
 
+    /**
+     * Updates the UI to show or hide the location loading overlay.
+     *
+     * @param show True to show the loading overlay, false to hide it.
+     */
     private fun updateLocationLoading(show: Boolean) {
         _binding?.let { binding ->
             binding.locationLoadingOverlay.isVisible = show

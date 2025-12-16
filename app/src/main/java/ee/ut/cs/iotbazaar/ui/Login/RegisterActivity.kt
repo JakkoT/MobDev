@@ -12,9 +12,18 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.appcompat.app.AlertDialog
 import ee.ut.cs.iotbazaar.theme.ThemePreferences
+
+/**
+ * Activity responsible for user registration.
+ * Allows new users to create an account using Email and Password.
+ */
 class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
+    /**
+     * Called when the activity is starting.
+     * Initializes UI components and sets up the registration logic.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         // Apply user-selected theme before view inflation
         ThemePreferences.applySavedMode(this)
@@ -68,6 +77,12 @@ class RegisterActivity : AppCompatActivity() {
             finish()
         }
     }
+
+    /**
+     * Checks if the device has an active internet connection.
+     *
+     * @return True if internet is available, false otherwise.
+     */
     private fun isInternetAvailable(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
@@ -75,6 +90,9 @@ class RegisterActivity : AppCompatActivity() {
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
+    /**
+     * Displays a dialog informing the user that there is no internet connection.
+     */
     private fun showNoInternetDialog() {
         AlertDialog.Builder(this)
             .setTitle("No Internet Connection")
