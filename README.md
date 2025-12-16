@@ -137,3 +137,6 @@ The project follows the MVVM (Model-View-ViewModel) architecture. Below is a det
 -   **Jetpack Components** (ViewBinding, Navigation, ViewModel, LiveData, WorkManager)
 -   **CameraX** & **ML Kit** (Google Code Scanner)
 -   **Retrofit** (Networking)
+
+## Demo
+A demo video showcasing the app's features is available [here](https://drive.google.com/file/d/1g7U8DulLNrSha0HmBw1a1ZtHoXrrJd-g/view?usp=sharing).
