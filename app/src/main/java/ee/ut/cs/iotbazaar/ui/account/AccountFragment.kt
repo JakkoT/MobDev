@@ -54,7 +54,7 @@ class AccountFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        // 🔹 Kuula Firestore currentUser doc
+        // Listen to fire base
         val uid = auth.currentUser?.uid
         if (uid != null) {
             userListener = firestore.collection("users_real")
@@ -73,7 +73,7 @@ class AccountFragment : Fragment() {
                 }
         }
 
-        // 🔹 Change name nupp
+        // Change name button
         binding.accountChangeNameButton.setOnClickListener {
             val newName = binding.accountNameEditText.text.toString().trim()
             if (newName.isEmpty()) {
@@ -96,7 +96,7 @@ class AccountFragment : Fragment() {
             }
         }
 
-        // 🔹 Logout
+        // Logout
         binding.accountLogoutButton.setOnClickListener {
             auth.signOut()
             Toast.makeText(requireContext(), R.string.logged_out_message, Toast.LENGTH_SHORT).show()
