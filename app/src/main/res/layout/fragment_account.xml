@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
     android:background="@android:color/transparent">
 
+    <!-- Header -->
     <LinearLayout
         android:id="@+id/accountHeader"
         android:layout_width="0dp"
@@ -52,14 +53,51 @@
             android:scaleType="centerInside" />
     </LinearLayout>
 
+    <!-- Current name display (cardi kohal) -->
+    <TextView
+        android:id="@+id/accountCurrentNameText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Hello! Anonymous"
+        android:textSize="18sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/accountHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Name edit -->
+    <EditText
+        android:id="@+id/accountNameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="New name"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/accountCurrentNameText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Change name button -->
+    <Button
+        android:id="@+id/accountChangeNameButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Change name"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/accountNameEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/accountCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="2dp"
-        app:layout_constraintTop_toBottomOf="@id/accountHeader"
+        app:layout_constraintTop_toBottomOf="@id/accountChangeNameButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -74,14 +112,16 @@
                 android:id="@+id/accountInsights"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Reserved items you are tracking appear on the home screen."
                 android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:gravity="center" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Log out button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/accountLogoutButton"
         style="@style/Widget.IOTBazaar.Button"
@@ -95,3 +135,5 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
